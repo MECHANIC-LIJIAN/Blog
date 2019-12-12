@@ -1,0 +1,321 @@
+{extend name="public/base"} {block name="title"} 修改资料 {/block}
+<!-- 引入头文件 -->
+{block name="header"}
+<!-- 引入原有文件 -->
+{__block__}
+<!-- 引入自定义css -->
+<link rel="stylesheet" href="__CSS__/person.css" />
+<style>
+    #header_box {
+        width: 100%;
+        height: 200px;
+        border: 1px solid #fff;
+        border-radius: 100%;
+        position: relative;
+    }
+    
+    #header_box img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+    }
+    
+    #header_box input:hover,
+    img:hover {
+        cursor: pointer;
+    }
+    
+    #header_box input {
+        width: 198px;
+        height: 200px;
+        opacity: 0;
+        z-index: 100;
+    }
+    
+    #heder_box img {
+        background-color: #ececec;
+    }
+    
+    .userpic {
+        width: 198px;
+        height: 100%;
+        position: absolute;
+        left: 40%;
+        top: 60%;
+        transform: translate(-50%, -50%);
+    }
+    
+    #usericon {
+        opacity: 0;
+        filter: alpha(opacity=0);
+    }
+</style>
+
+{/block} {block name="main"}
+<div class="container xdd-team-container">
+    <!--team头像统计信息-->
+    <div class="xdd-team-detail-head">
+        <img src="__IMG__/team-detail-background-img.png" class="xdd-team-detail-backimg" alt="">
+        <div class="xdd-team-detail-headname">
+            <!-- <h1><a href="{:url('blog/Member/person',['id'=>$memberInfo.member_id])}">{$memberInfo.nickname}</a></h1> -->
+            <ul class="xdd-team-detail-headul">
+                <li>
+                    <p>{$memberInfo.follow_num}</p>关注
+                </li>
+                <li>
+                    <p>{$memberInfo.followed_num}</p>粉丝
+                </li>
+                <li>
+                    <p>{$memberInfo.article_num}</p>文章
+                </li>
+                <!-- <li>
+                    <p>134665</p>贡献字数
+                </li> -->
+            </ul>
+        </div>
+        {if $memberInfo.pic!=null}
+        <a href="{:url('blog/Member/person',['id'=>$memberInfo.member_id])}">
+            <img src="{$memberInfo.pic}" alt="" id="userpic" name="userpic" width="150px" height="150px" class="img-circle xdd-team-detail-headimg" /> </a>
+        {else /}
+
+        <img src="__IMG__/moren.jpg" alt="" id="userpic" name="userpic" width="150px" height="150px" /> {/if}
+        <div class="xdd-team-detail-write">
+            {if $memberInfo.member_id!=session('member.id')} {if $follow ==null}
+            <button id="follow" style="background-color:#0084ff;float: right;width: 100px" onselectstart="return false;">
+                关注TA
+            </button> {else /}
+            <button id="follow" style="background-color:#a0a0a0;float: right;width: 100px" onselectstart="return false;">
+                已关注
+            </button> {/if} {else /}
+
+            <div class="btn-group">
+                <button id="subobject" type="button" class="btn">发布项目</button>
+                <button id="subarticle" type="button" class="btn">发布博客</button>
+                <button id="editInfo" type="button" class="btn">编辑个人资料</button>
+            </div>
+            {/if}
+        </div>
+    </div>
+    <!-- team内容 -->
+    <div class="am-g am-g-fixed xdd-container">
+
+        <div class="xdd-block-background">
+
+            <div>
+                <form class="form-horizontal" style="height: 500px">
+                    <input type="hidden" id="id" name="id" value="{$memberInfo.id}" />
+                    <div id="header_box">
+                        <div class="userpic" alt="点击修改头像">
+                            <img src="{$memberInfo.pic}" alt="" id="iconpic" name="userpic" />
+                            <input type="file" id="usericon" name="usericon" accept="image/gif,image/jpeg,image/jpg,image/png,image/svg" style="height: 200px;width:200px" / value="">
+                            <input type="hidden" value="{$memberInfo.pic}" id="icon" name="icon">
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3" style="margin-top: 100px">
+                        <label for="nickname" class="col-sm-2 control-label no-padding-right">昵称</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="nickname" name="nickname" placeholder="昵称" value="{$memberInfo.nickname}" />
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label for="sex" class="col-sm-2 control-label no-padding-right">性别</label>
+                        <div>
+                            <label class="radio-inline" style="margin-left: 20px">
+                                <input type="radio" id="sex" name="sex" {if $memberInfo.sex==1}checked{/if}
+                                    value="1">男</label>
+                            <label class="radio-inline" style="margin-left: 40px">
+                                <input type="radio" id="sex" name="sex" {if $memberInfo.sex==0}checked{/if}
+                                    value="0">女</label>
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label for="phone" class="col-sm-2 control-label no-padding-right">电话</label>
+                        <div class="col-sm-6">
+                            <input type="tel" class="form-control" id="phone" name="phone" value="{$memberInfo.phone}" />
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label for="email" class="col-sm-2 control-label no-padding-right">联系邮箱</label>
+                        <div class="col-sm-6">
+                            <input type="email" class="form-control" id="email" name="email" value="{$memberInfo.email}" />
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label class="col-sm-2 control-label">省份</label>
+                        <div class="col-sm-6" style="width: 200px;">
+                            <select id="province" name="province" class="form-control" style="width: 180px;">
+                                <option value="" selected="selected">-- 请选择所在省份 --</option>
+                                {volist name="province" id="vo"}
+                                <option value="{$vo.id}" {if $memberInfo.province==$vo.cityname}selected{/if}>{$vo.cityname}</option>
+                                {/volist}
+                            </select>
+                        </div>
+                        <label class="col-sm-2 control-label" style="width: 50px;">市</label>
+                        <div class="col-sm-6">
+                            <select id="city" name="city" class="form-control" style="width: 180px;">                               
+                                    <option value="" selected="selected">-- 请选择所在城市 --</option>
+                                    {volist name="city" id="vo"}
+                                    <option value="{$vo.cityname}" {if $memberInfo.city==$vo.cityname}selected{/if}>{$vo.cityname}</option>
+                                    {/volist}
+                                  
+                                </select>
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label for="major" class="col-sm-2 control-label no-padding-right">研究方向</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="major" name="major" value="{$memberInfo.major}" placeholder="以逗号分隔" />
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label for="desc" class="col-sm-2 control-label no-padding-right">个人简介</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="desc" name="desc" value="{$memberInfo.desc}" />
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label for="organization" class="col-sm-2 control-label no-padding-right">organization</label>
+                        <div class="col-sm-6">
+                            <input type="tel" class="form-control" id="organization" name="organization" value="{$memberInfo.organization}" />
+                        </div>
+                    </div>
+                    <div class="form-group row-sm-3">
+                        <label for="address" class="col-sm-2 control-label no-padding-right">通讯地址</label>
+                        <div class="col-sm-6">
+                            <input type="text" class="form-control" id="address" name="address" value="{$memberInfo.address}" />
+                        </div>
+                    </div>
+                    <button id="tijiao">保存</button>
+            </div>
+            </form>
+            <input id="member_id" type="hidden" value="{$memberInfo.id}" />
+        </div>
+    </div>
+</div>
+{/block} {block name="js"}
+
+<script type="text/javascript">
+    $(function() {
+
+
+        $("#editInfo").click(function() {
+            window.location.href = "{:url('blog/Member/edit')}";
+            return false;
+        });
+
+
+        /*
+        请求城市列表
+        */
+
+        $('#province').click(function() {
+            var province = $(this).val();
+
+            $.ajax({
+                type: "post",
+                url: "{:url('blog/Member/city')}",
+                data: {
+                    province: province
+                },
+                dataType: "json",
+                success: function(data) {
+                    $('#city option').remove();
+                    for (var i in data) {
+                        $('#city').append("<option value='" + data[i].cityname + "'>" + data[i].cityname + "</option>")
+                    }
+                }
+            });
+        });
+
+
+        /*
+         * 编辑个人资料
+         *
+         */
+        $("#tijiao").click(function() {
+            if ("{:session('?member.id')}") {
+                $.ajax({
+                    url: "{:url('blog/Member/edit')}",
+                    type: "post",
+                    data: $("form").serialize(),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(
+                                data.msg, {
+                                    icon: 6,
+                                    time: 2000
+                                },
+                                function() {
+                                    location.href = data.url;
+                                }
+                            );
+                        } else {
+                            layer.open({
+                                title: "更新失败！",
+                                content: data.msg,
+                                icon: 5,
+                                anim: 5
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function() {
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+        });
+    });
+
+    function upimg(obj) {
+        if (obj.value == "") {
+            return;
+        }
+        var formdata = new FormData();
+        formdata.append("img", $(obj)[0].files[0]); //获取文件
+        $.ajax({
+            type: 'post',
+            url: "{:url('blog/Member/icon')}", //接口
+            data: formdata,
+            cache: false,
+            processData: false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
+            contentType: false, // 不设置Content-type请求头
+            success: function(response) {
+                if (response.code == 1) {
+                    $("#iconpic").attr("src", response.data)
+                    $("#icon").attr("value", response.data)
+                } else {
+                    $("#usericon").reset
+                }
+            }
+
+        });
+    }
+
+    $("#usericon").on("change", function() {
+        var file = this.files[0]
+        var index = file.name.lastIndexOf(".");
+        var type = file.name.substring(index);
+        if (type != ".jpg" && type != ".png") {
+            alert("只能上传jpg和png格式的图片！！");
+            return;
+        } else {
+            upimg(this)
+        }
+
+    });
+</script>
+
+{/block}
+</div>

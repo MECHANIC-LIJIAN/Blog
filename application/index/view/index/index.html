@@ -1,0 +1,103 @@
+{extend name="public/base" /}
+<!-- 网页标题 -->
+{block name="title"} {$catename|default="BioBlog"}——{$webInfo.webname} {/block}
+<!-- 首页文章列表 -->
+{block name="article-list"} 
+
+<div id="artlist" style="height:960px">
+    {volist name="articleList" id="vo"}
+
+    <div class="article-list-item">
+        <a href="{:url('index/Article/info',['id'=>$vo.id])}" target="_blank" class="title ">{$vo.title}</a>
+        <div class="info ">
+            <span class="author ">作者：{$vo.members.nickname}</span>&nbsp;&nbsp;
+            <span class="time ">更新时间：{$vo.update_time}</span>&nbsp;&nbsp;
+            <span class="hits ">点击量：{$vo.hits}</span>
+        </div>
+    </div>
+    {/volist}
+</div>
+{/block}
+
+
+<!-- 底部js -->
+{block name="js"}
+<script type="text/javascript">
+    var pageIndex = 2;
+    window.onscroll = function() {
+        if (getScrollTop() + getClientHeight() == getScrollHeight()) {
+            pageIndex++;
+            $.ajax({
+                url: "{:url('index/Index/list')}",
+                type: "post",
+                data: {
+                    pageIndex: pageIndex,
+                    cateId: "{:$cateId}"
+                },
+                dataType: "json",
+                success: function(json) {
+                    var msg = json['rows'];
+
+                    var listLength = msg.length;
+
+                    if (listLength == 0) {
+                        pageIndex--;
+                        //alert(pageIndex);
+
+                    } else {
+                        for (var i = 0; i < listLength; i++) {
+                            var jsonForeach = msg[i];
+                            var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+                            var str = '<div class="article-list-item">';
+                            str = str + '<a href="article-' + jsonObjForeach['id'] + '" class="title">' + jsonObjForeach['title'] + '</a> ';
+                            str = str + '<div class ="info"><span class="author">作者：' + jsonObjForeach['members']['nickname'] + '</span>&nbsp;&nbsp;';
+                            str = str + '<span class ="time">更新时间：' + jsonObjForeach['create_time'] + '</span>&nbsp;&nbsp;';
+                            str = str + '<span class ="hits">点击量：' + jsonObjForeach['hits'] + '</span></div></div>';
+                            $("#artlist").append(str);
+                        }
+
+                    }
+                }
+            });
+        }
+    };
+
+
+    //获取滚动条当前的位置
+    function getScrollTop() {
+        var scrollTop = 0;
+        if (document.documentElement && document.documentElement.scrollTop) {
+            scrollTop = document.documentElement.scrollTop;
+        } else if (document.body) {
+            scrollTop = document.body.scrollTop;
+        }
+        return scrollTop;
+    }
+
+    //获取当前可是范围的高度
+    function getClientHeight() {
+        var clientHeight = 0;
+        if (document.body.clientHeight && document.documentElement.clientHeight) {
+            clientHeight = Math.min(
+                document.body.clientHeight,
+                document.documentElement.clientHeight
+            );
+        } else {
+            clientHeight = Math.max(
+                document.body.clientHeight,
+                document.documentElement.clientHeight
+            );
+        }
+        return clientHeight;
+    }
+
+    //获取文档完整的高度
+    function getScrollHeight() {
+        return Math.max(
+            document.body.scrollHeight,
+            document.documentElement.scrollHeight
+        );
+    }
+</script>
+
+{/block}

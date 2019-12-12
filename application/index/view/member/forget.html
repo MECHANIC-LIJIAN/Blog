@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>忘记密码</title>
+    <link rel="shortcut icon" href="__IMG__/logo.jpg" type="image/x-icon" />
+    <link href="__CSS__/bootstrap.min.css" rel="stylesheet" />
+    <style>
+        .login-container {
+            position: relative;
+            margin: 10% auto;
+            max-width: 300px
+        }
+        
+        .login-container .loginbox {
+            position: relative;
+            width: 300px !important;
+            height: auto !important;
+            padding: 0 0 20px 0;
+            -webkit-box-shadow: 0 0 14px rgba(0, 0, 0, .1);
+            -moz-box-shadow: 0 0 14px rgba(0, 0, 0, .1);
+            box-shadow: 0 0 14px rgba(0, 0, 0, .1)
+        }
+        
+        .login-container .loginbox .loginbox-title {
+            position: relative;
+            text-align: center;
+            width: 100%;
+            height: 35px;
+            padding-top: 10px;
+            font-family: 'Lucida Sans', 'trebuchet MS', Arial, Helvetica;
+            font-size: 20px;
+            font-weight: normal;
+            color: #444
+        }
+        
+        .login-container .loginbox .loginbox-or {
+            position: relative;
+            text-align: center;
+            height: 20px
+        }
+        
+        .login-container .loginbox .loginbox-or .or {
+            position: absolute;
+            top: 0;
+            -lh-property: 0;
+            left: -webkit-calc(50% - 25px);
+            left: -moz-calc(50% - 25px);
+            left: calc(50% - 25px);
+            width: 50px;
+            height: 20px;
+            background-color: #fff;
+            color: #999;
+            margin: 0 auto
+        }
+        
+        .login-container .loginbox .loginbox-or .or-line {
+            position: absolute;
+            height: 1px;
+            top: 10px;
+            left: 40px;
+            right: 40px;
+            background-color: #ccc
+        }
+        
+        .login-container .loginbox .loginbox-textbox {
+            padding: 10px 40px
+        }
+        
+        .login-container .loginbox .loginbox-textbox .form-control {
+            -webkit-border-radius: 3px !important;
+            -webkit-background-clip: padding-box !important;
+            -moz-border-radius: 3px !important;
+            -moz-background-clip: padding !important;
+            border-radius: 3px !important;
+            background-clip: padding-box !important
+        }
+        
+        .login-container .loginbox .loginbox-forgot {
+            padding-left: 40px
+        }
+        
+        .login-container .loginbox .loginbox-forgot a {
+            font-size: 11px;
+            color: #666
+        }
+        
+        .login-container .loginbox .loginbox-submit {
+            padding: 10px 40px
+        }
+        
+        .login-container .loginbox .loginbox-signup {
+            text-align: center;
+            padding-top: 10px
+        }
+        
+        .login-container .loginbox .loginbox-signup a {
+            font-size: 13px;
+            color: #666
+        }
+        
+        .login-container .logobox {
+            width: 300px !important;
+            height: 50px !important;
+            padding: 5px;
+            margin-top: 15px;
+            -webkit-box-shadow: 0 0 14px rgba(0, 0, 0, .1);
+            -moz-box-shadow: 0 0 14px rgba(0, 0, 0, .1);
+            box-shadow: 0 0 14px rgba(0, 0, 0, .1);
+            background-color: #fff;
+            text-align: left
+        }
+        
+        .register-container {
+            position: relative;
+            margin: 8% auto;
+            max-width: 350px
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="loginbox bg-white">
+            <form>
+                <div class="loginbox-title">忘记密码？</div>
+
+                <div class="loginbox-or">
+                    <div class="or-line"></div>
+                </div>
+                <div class="loginbox-textbox">
+                    <input type="email" class="form-control" name="email" placeholder="请输入注册邮箱" />
+                </div>
+                <div class="loginbox-textbox hidden">
+                    <input type="text" class="form-control" name="code" placeholder="验证码" />
+                </div>
+                <div class="loginbox-submit">
+                    <input id="sendCode" type="submit" class="btn btn-primary btn-block" value="发送验证码" />
+                </div>
+
+                <div class="loginbox-textbox hidden">
+                    <input type="password" class="form-control" name="password" placeholder="请输入新密码" />
+                </div>
+                <div class="loginbox-textbox hidden">
+                    <input type="password" class="form-control" name="conpass" placeholder="再次输入新密码" />
+                </div>
+                <div class="loginbox-submit hidden">
+                    <input name="reset" id="reset" type="submit" class="btn btn-primary btn-block" value="重置密码" />
+                </div>
+                <div class="loginbox-signup">
+                    <a href="{:url('index/Member/login')}">返回登录</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--Basic Scripts-->
+    <script src="__JS__/jquery.min.js"></script>
+    <script src="__JS__/bootstrap.min.js"></script>
+
+    <!-- layer -->
+    <script src="__LIB__/layer/layer.js"></script>
+
+    <script>
+        $(window).bind("load", function() {
+            /*Sets Themed Colors Based on Themes*/
+            themeprimary = getThemeColorFromCss("themeprimary");
+            themesecondary = getThemeColorFromCss("themesecondary");
+            themethirdcolor = getThemeColorFromCss("themethirdcolor");
+            themefourthcolor = getThemeColorFromCss("themefourthcolor");
+            themefifthcolor = getThemeColorFromCss("themefifthcolor");
+        });
+
+        $(function() {
+            $("#sendCode").click(function() {
+                $.ajax({
+                    url: "{:url('index/Member/forget')}",
+                    type: 'post',
+                    data: $("form").serialize(),
+                    dataType: 'json',
+                    success: function(data) {
+
+
+                        $('[name=email]').parent().addClass('hidden');
+                        $('[name=code]').parent().removeClass('hidden');
+                        $('#sendCode').parent().addClass('hidden');
+                        $('#reset').parent().removeClass('hidden');
+                        $('[name=password]').parent().removeClass('hidden');
+                        $('[name=conpass]').parent().removeClass('hidden');
+
+                    }
+                })
+                return false;
+            });
+        });
+
+        $(function() {
+            $("#reset").click(function() {
+                $.ajax({
+                    url: "{:url('index/Member/reset')}",
+                    type: 'post',
+                    data: $("form").serialize(),
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 2000
+                            }, function() {
+                                location.href = data.url;
+                            });
+                        } else {
+                            layer.open({
+                                title: '密码重置失败',
+                                content: data.msg,
+                                icon: 5,
+                            });
+                        }
+                    }
+                })
+                return false;
+            });
+        });
+    </script>
+</body>
+<!--  /Body -->
+
+</html>

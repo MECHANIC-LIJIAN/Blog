@@ -1,0 +1,173 @@
+{extend name="public/base"}
+{block name="title"}
+{$memberInfo.username}的个人中心
+{/block}
+<!-- 引入头文件 -->
+{block name="header"}
+<!-- 引入原有文件 -->
+{__block__}
+<!-- 引入自定义css -->
+<link rel="stylesheet" href="__CSS__/person.css"> {/block}
+
+
+
+{block name="person"}
+<div class="main">
+    <div>
+        <div class="person-card">
+            card
+            <div>
+                <div class="person-info">
+                    <span>{$memberInfo.id}</span>
+                    <span>{$memberInfo.username}</span>
+                    <span>{$memberInfo.email}</span>
+                    <span>{$memberInfo.create_time}</span>
+                </div>
+            </div>
+        </div>
+        <div class="person-artlist">
+            <div class="listheader">
+                <ul class="nav navbar-nav navbar-left">
+                    {volist name="cates" id="cate"}
+                    <li><a href="#" class="personart" id="catename" dataid="{$cate.id}">{$cate.catename}</a></li>
+                    {/volist}
+                </ul>
+            </div>
+            <div id="artlist" class="artlist" style="height:900px">
+                {volist name="articleList" id="vo"}
+
+                <div class="article-list-item">
+                    <a href="{:url('index/Article/info',['id'=>$vo.id])} " class="title ">{$vo.title}</a>
+                    <div class="info ">
+                        <span class="author ">作者：{$vo.author}</span>&nbsp;&nbsp;
+                        <span class="time ">更新时间：{$vo.update_time}</span>&nbsp;&nbsp;
+                        <span class="hits ">点击量：{$vo.hits}</span>
+                    </div>
+                </div>
+                {/volist}
+            </div>
+        </div>
+
+    </div>
+</div>
+
+{/block}
+
+
+{block name="js"}
+<script type="text/javascript">
+    $(function() {
+        $(".personart").click(function() {
+
+            var cateId = $(this).attr('dataid');
+            var pageIndex = 1;
+            $.ajax({
+                url: "{:url('index/Member/list')}",
+                type: "post",
+                data: {
+                    pageIndex: pageIndex,
+                    cateId: cateId
+                },
+                dataType: "json",
+                success: function(json) {
+                    $("#artlist").html("");
+                    var msg = json['rows'];
+                    var listLength = msg.length;
+                    if (listLength == 0) {
+                        pageIndex--;
+                        //alert(pageIndex);
+
+                    } else {
+                        for (var i = 0; i < listLength; i++) {
+                            var jsonForeach = msg[i];
+                            var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+                            var str = '<div class="article-list-item">';
+                            str = str + '<a href="article-' + jsonObjForeach['id'] + '" class=\"title\">' + jsonObjForeach['title'] + '</a>';
+                            str = str + '<div class ="info"><span class="author">作者：' + jsonObjForeach['author'] + '</span>&nbsp;&nbsp;';
+                            str = str + '<span class ="time">更新时间：' + jsonObjForeach['create_time'] + '</span>&nbsp;&nbsp;';
+                            str = str + '<span class ="hits">点击量：' + jsonObjForeach['hits'] + '</span></div></div>';
+                            $("#artlist").append(str);
+                        }
+                    }
+                }
+            });
+
+            window.onscroll = function() {
+                if (getScrollTop() + getClientHeight() == getScrollHeight()) {
+                    pageIndex++;
+
+                    $.ajax({
+                        url: "{:url('index/Member/list')}",
+                        type: "post",
+                        data: {
+                            pageIndex: pageIndex,
+                            cateId: cateId
+                        },
+                        dataType: "json",
+                        success: function(json) {
+                            var msg = json['rows'];
+
+                            var listLength = msg.length;
+
+                            if (listLength == 0) {
+                                pageIndex--;
+                                //alert(pageIndex);
+
+                            } else {
+                                for (var i = 0; i < listLength; i++) {
+                                    var jsonForeach = msg[i];
+                                    var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+                                    var str = '<div class="article-list-item">';
+                                    str = str + '<a href="article-' + jsonObjForeach['id'] + '" class=\"title\">' + jsonObjForeach['title'] + '</a>';
+                                    str = str + '<div class ="info"><span class="author">作者：' + jsonObjForeach['author'] + '</span>&nbsp;&nbsp;';
+                                    str = str + '<span class ="time">更新时间：' + jsonObjForeach['create_time'] + '</span>&nbsp;&nbsp;';
+                                    str = str + '<span class ="hits">点击量：' + jsonObjForeach['hits'] + '</span></div></div>';
+                                    $("#artlist").append(str);
+                                }
+
+                            }
+                        }
+                    });
+                }
+            };
+            return false;
+        });
+        //获取滚动条当前的位置
+        function getScrollTop() {
+            var scrollTop = 0;
+            if (document.documentElement && document.documentElement.scrollTop) {
+                scrollTop = document.documentElement.scrollTop;
+            } else if (document.body) {
+                scrollTop = document.body.scrollTop;
+            }
+            return scrollTop;
+        }
+
+        //获取当前可是范围的高度
+        function getClientHeight() {
+            var clientHeight = 0;
+            if (document.body.clientHeight && document.documentElement.clientHeight) {
+                clientHeight = Math.min(
+                    document.body.clientHeight,
+                    document.documentElement.clientHeight
+                );
+            } else {
+                clientHeight = Math.max(
+                    document.body.clientHeight,
+                    document.documentElement.clientHeight
+                );
+            }
+            return clientHeight;
+        }
+
+        //获取文档完整的高度
+        function getScrollHeight() {
+            return Math.max(
+                document.body.scrollHeight,
+                document.documentElement.scrollHeight
+            );
+        }
+    });
+</script>
+
+{/block}

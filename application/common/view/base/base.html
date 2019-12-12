@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="IMG/x-icon" href="/favicon.ico" />
+    <title>{block name="title"}{/block}</title>
+    {block name="header"}{/block}
+    <!-- Bootstrap core CSS -->
+    <link href="__CSS__/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="__CSS__/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="__FONT__/css/font-awesome.css" rel="stylesheet">
+    <link href="__CSS__/mysite.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!--<link href="../static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
+
+    <!-- Custom styles for this template -->
+    <!--<link href="theme.css" rel="stylesheet">-->
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <script src="__JS__/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!--<script src="../static/js/ie-emulation-modes-warning.js"></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style>
+        html {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+
+<body>
+
+    <!-- Fixed navbar -->
+    <nav class="navbar navbar-default navbar-fixed-top" style="z-index: 99999!important;">
+        <div class="container">
+            <div class="navbar-header" style="position: relative;">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+                    <!-- <span class="sr-only">Toggle navigation</span> -->
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+
+            </div>
+            <div id="navbar" class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="{:url('index/Index/index')}">首页</a></li>
+                    <!-- <li><a href="project.html">项目</a></li>
+                    <li><a href="{:url('team/Index/index')}">团队</a></li> -->
+                    {block name="curent"}
+                    <li><a href="{:url('blog/Index/index')}">博客</a></li>
+                    <li><a href="{:url('plot/Index/index')}">绘图</a></li>{/block}
+                    <!-- <li><a href="answer.html">问答</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">工具<span class="caret"></span></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="paint.html">绘图</a></li>
+                            <li><a href="ngspipeline.html">二代测序</a></li>
+                            <li><a href="moretools.html">更多</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li class="dropdown-header">Nav header</li>
+                            <li><a href="download.html">下载</a></li>
+                            <li><a href="#">One more separated link</a></li>
+                        </ul>
+                    </li> -->
+                </ul>
+
+                <div class="am-topbar-right">
+                    {if session('member.username') !=null}
+                    <ul class="nav navbar-nav  navbar-right">
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{:session('member.nickname')}<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{:url('blog/Member/person',['id'=>session('member.id')])}" target="_blank">个人中心</a>
+                                </li>
+                                <li><a href="{:url('blog/Member/logout')}">退出登陆</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    {else /}
+
+                    <ul class="nav navbar-nav  navbar-right">
+                        <li><a href="{:url('blog/Member/login')}">登录</a></li>
+                        <li><a href="{:url('blog/Member/register')}">注册</a></li>
+                    </ul>
+                    {/if}
+                </div>
+
+                <form action="{:url('search/Search/index')}" onsubmit="document.charset='UTF-8';" method="GET" accept-charset="UTF-8" class="navbar-form navbar-right">
+                    <div class="input-group">
+                        <input type="text" class="form-control" onfocus="this.select();" name="keyword" value="{if $keyword!='all'}{$keyword}{/if}" placeholder="Search...">
+                        <span class="input-group-btn">
+				        <button class="btn btn-default" type="submit"><span class="fa fa-search"></span></button>
+                        </span>
+                    </div>
+                    <!-- /input-group -->
+                </form>
+
+            </div>
+            <!--/.nav-collapse -->
+        </div>
+    </nav>
+
+
+    {block name="main"}
+
+    <div class="container xdd-team-container">
+        <div class="row">
+
+            <!-- 左 -->
+            {block name="left-sider"}{/block}
+
+            <!-- 左end -->
+
+
+            <!-- 主体 -->
+            {block name="container"} {/block}
+
+            <!-- 主体end -->
+
+            <!-- 右 -->
+            {block name="right-sider"} {/block}
+
+            <!-- 右end -->
+        </div>
+    </div>
+    {/block} {block name="footer"}
+    <footer class="footer xdd-footer">
+        <div class="container">
+            <div class="xdd-footer-wx">
+                <img src="__IMG__/weixin.jpg">
+                <span>我的微信</span>
+            </div>
+            <div class="row">
+                <div class="col-xs-6 col-md-6 xdd-footer-info">
+                    <p><b>MySite</b></p>
+                    <p>哈尔滨医科大学生物信息科学与技术学院<b>软件工程教研室</b></p>
+                    <p><span class="fa fa-envelope"> </span> Email: xindd_2014@163.com</p>
+                    <p>Copyright © ......... 备案号：123456789</p>
+                </div>
+                <div class="col-xs-3 col-md-3 xdd-footer-info">
+                    <p><b>联系方式</b></p>
+                    <p><span class="fa fa-phone"> </span> 电话：18846124409</p>
+                    <p><span class="fa fa-qq"> </span> QQ: 1184935343</p>
+                    <p><b>友情链接</b></p>
+                    <p><a href="#">xxx网</a> <a href="#">xxx网</a> <a href="#">xxx网</a></p>
+                </div>
+            </div>
+
+        </div>
+    </footer>
+    {/block}
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="__JS__/jquery.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="__JS__/jquery.min.js"><\/script>')
+    </script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <!--<script src="__JS__/js/docs.min.js"></script>-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!--<script src="__JS__/ie10-viewport-bug-workaround.js"></script>-->
+    <script src="__LIB__/layer/layer.js"></script>
+
+    {block name="js"} {/block}
+</body>
+
+</html>

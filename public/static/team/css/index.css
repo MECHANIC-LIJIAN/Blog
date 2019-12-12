@@ -1,0 +1,455 @@
+body,
+button,
+textarea {
+    font: 12px/1.125 simsun, Arial, Helvetica, sans-serif;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+dl,
+dt,
+dd,
+ul,
+ol,
+li,
+th,
+td,
+p,
+blockquote,
+pre,
+form,
+fieldset,
+legend,
+input,
+button,
+textarea,
+hr {
+    margin: 0;
+    padding: 0
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+ul,
+dl,
+ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+fieldset,
+img {
+    border: 0
+}
+
+q:before,
+q:after {
+    content: ''
+}
+
+input,
+textarea {
+    outline-style: none
+}
+
+input[type="text"],
+input[type="password"],
+textarea {
+    outline-style: none;
+    -webkit-appearance: none
+}
+
+textarea {
+    resize: none
+}
+
+address,
+caption,
+cite,
+code,
+dfn,
+em,
+i,
+th,
+var {
+    font-style: normal;
+    font-weight: normal;
+}
+
+abbr,
+acronym {
+    border: 0;
+    font-variant: normal
+}
+
+a {
+    color: #333;
+    text-decoration: none;
+}
+
+a:hover {
+    color: #ff5500;
+    text-decoration: none;
+}
+
+.clear {
+    margin: 0;
+    padding: 0;
+    clear: both;
+}
+
+.clearfix:after {
+    content: ".";
+    display: block;
+    height: 0;
+    clear: both;
+    visibility: hidden;
+}
+
+.clearfix {
+    zoom: 1;
+}
+
+body {
+    background: #fff;
+    font-family: "microsoft YaHei";
+    color: #333;
+}
+
+.float_left {
+    float: left;
+}
+
+.float_right {
+    float: right;
+}
+
+.content {
+    width: 1200px;
+    margin: 0 auto 50px auto;
+    background: #fff;
+}
+
+.content_left {
+    width: 880px;
+    float: left;
+}
+
+.none {
+    display: none;
+}
+
+.team_list_box {
+    width: 100%;
+    float: left;
+    overflow: hidden;
+}
+
+.team_item {
+    border-bottom: 1px solid #eee;
+    padding: 10px 0;
+    float: left;
+    width: 100%;
+}
+
+.team_item.hover {
+    background: #f9f9f9;
+}
+
+.team_item .team_info {
+    width: 700px;
+}
+
+.team_logo {
+    width: 370px;
+    height: 370px;
+    float: left;
+    margin: 0 30px 0 0;
+    border-right: 1px solid #eee;
+    text-align: center;
+    overflow: hidden;
+}
+
+.team_logo img {
+    max-width: 300px;
+    max-height: 300px;
+}
+
+.team_sm {
+    width: 440px;
+    padding: 15px 20px;
+    line-height: 30px;
+    float: left;
+    font-size: 14px;
+    background: #fef2e5;
+}
+
+.team_pic {
+    margin: 15px;
+    float: left;
+}
+
+.team_pic img {
+    width: 120px;
+    height: 120px;
+    border-radius: 2px;
+}
+
+.team_info {
+    width: 405px;
+    float: left;
+    margin: 15px 0 0 0;
+    word-break: break-all;
+    word-wrap: break-word;
+}
+
+.team_info .team_title {
+    font-size: 16px;
+    line-height: 25px;
+    font-weight: normal;
+}
+
+.team_info .team_title a {
+    color: #000;
+}
+
+.team_info .team_title a:hover {
+    color: #ff5500;
+}
+
+.team_icon {
+    margin: 5px 0 0 0;
+}
+
+.team_icon span {
+    width: 20px;
+    height: 20px;
+    display: inline-block;
+}
+
+.team_icon .email_icon {
+    background-position: 0 0;
+}
+
+.team_icon .phone_icon {
+    background-position: -20px 0;
+}
+
+.team_icon .id_icon {
+    background-position: -40px 0;
+}
+
+.team_info .team_area {
+    margin: 10px 0 0 0;
+    font-family: "simsun";
+}
+
+.team_info .team_area span {
+    margin: 0 50px 0 0;
+    color: #444;
+}
+
+.team_info .team_specialty {
+    line-height: 22px;
+    height: 44px;
+    overflow: hidden;
+    margin: 10px 0 0 0;
+    color: #888;
+    font-family: "simsun"
+}
+
+.team_title {
+    font-size: 26px;
+    line-height: 40px;
+    margin: 25px 0 0 0;
+    padding: 0 0 10px 0;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.team_info_wrap {
+    margin: 20px 0 0 0;
+}
+
+.team_info_box {
+    float: left;
+}
+
+.team_info_box ul li {
+    height: 38px;
+    line-height: 38px;
+    font-size: 14px;
+}
+
+.team_right {
+    float: right;
+    width: 420px;
+}
+
+.team_column {
+    width: 100%;
+    margin: 50px 0 0 0;
+    float: left;
+}
+
+.team_column_tit {
+    width: 100%;
+    height: 35px;
+    position: relative;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.team_column_tit h2 {
+    font-size: 20px;
+    font-weight: normal;
+    height: 24px;
+    line-height: 24px;
+    border-left: 3px solid #ff5500;
+    padding: 0 10px;
+}
+
+.team_column_info {
+    font-size: 14px;
+    line-height: 30px;
+    color: #333;
+    margin: 20px 15px;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.team_column_info img {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.team_info {
+    font-size: 14px;
+    line-height: 30px;
+    color: #333;
+    padding: 15px;
+    background: #fff;
+    border-top-width: 0px;
+    word-break: break-all;
+    word-wrap: break-word;
+    overflow: hidden;
+}
+
+.article-list-item {
+    background: #EEEEEE;
+    padding: 10px;
+    margin-bottom: 10px;
+    border: #CCCCCC solid 1px;
+    box-shadow: 1px 1px 5px #D9EDF7;
+    border-radius: 5px;
+}
+
+.article-list-item .title {
+    display: block;
+    font-weight: bold;
+    padding-bottom: 10px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.article-list-item .info {
+    color: #999999;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/*轮播图play*/
+
+.play {
+    margin: 0 auto;
+    width: 1170px;
+    height: 460px;
+    position: relative;
+}
+
+.play ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.play img {
+    margin: 0 0 0 235px;
+    width: 935px;
+    height: 460px;
+    display: block;
+}
+
+.imgList li {
+    position: absolute;
+    opacity: 0;
+    transition: opacity 1s;
+    top: 0;
+    left: 0;
+}
+
+.imgList li.current {
+    opacity: 1;
+}
+
+.play-list {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+.play-list span {
+    float: left;
+    width: 12px;
+    height: 12px;
+    border: 1px solid #999;
+    background: #999;
+    border-radius: 7px;
+    font-size: 0;
+    margin-right: 5px;
+    cursor: pointer;
+}
+
+.play-list span.current {
+    background: red;
+}
+
+.slide {
+    position: absolute;
+    color: #fff;
+    background: rgb(0, 0, 0, .6);
+    height: 80px;
+    width: 40px;
+    top: 50%;
+    line-height: 80px;
+    text-align: center;
+    opacity: 0.5;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 20px;
+    transform: translate(0, -50%);
+    transition: 0.3s;
+}
+
+.slide:hover {
+    opacity: 1;
+}
+
+.slide-left {
+    left: 234px;
+}
+
+.slide-right {
+    right: 1px;
+}

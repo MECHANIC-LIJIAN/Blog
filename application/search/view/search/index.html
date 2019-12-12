@@ -1,0 +1,144 @@
+{extend name="Common@base/base" /}
+<!-- 网页标题 -->
+{block name="title"} "{$keyword}"的搜索结果 {/block} {block name="container"}
+
+<div class="col-lg-8">
+
+    <div class="xdd-block-background">
+        {empty name="list"}
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="button" class="btn load-more-btn">抱歉，没有搜索到"<font style='color:red'>{$keyword}</font>"相关的内容!</button>
+            </div>
+        </div>{else /}
+        <div class="row">
+            <div class="col-lg-12">
+                <button type="button" class="btn load-more-btn">"<font style='color:red'>{$keyword}</font>"的搜索结果</button>
+            </div>
+        </div> {volist name="list" id="vo"}
+        <div class="row">
+            {if $vo.pic!=null}
+
+            <div class="col-lg-3">
+                <div class="xdd-blog-img xdd-imgscale">
+                    <a href="{:url('blog/Article/info',['id'=>$vo.id])}" target="_blank"><img src="{$vo.pic}" alt="" class=""></a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                {else /}
+                <div class="col-lg-12">
+                    {/if}
+                    <div class="xdd-blog-text xdd-blog-text-img">
+                        <h2><a href="{:url('blog/Article/info',['id'=>$vo.id])}" target="_blank">{$vo.title|str_replace=$keyword,"<font style='color:red'>".$keyword."</font>",$vo.title,###|raw}</a></h2>
+                        <p>{$vo.desc}...</p>
+                        <p>
+                            <span class="xdd-blog-user"> 
+                                <a href="{:url('blog/Member/person',['id'=>$vo.member_id])}" target="_blank"><img  width="30" height="30" src="{$vo.members.pic}" /></a>
+
+                                <h5><a title="{$vo.members.nickname}的主页" href="{:url('blog/Member/person',['id'=>$vo.member_id])}"
+                                    target="_blank">{$vo.members.nickname}</a></h5>
+                        </span>
+                            <span class="xdd-blog-articleinfo">
+                              <i class="" aria-hidden="true"></i>&nbsp;{$vo.update_time}&nbsp;&nbsp;
+                              <i class="" aria-hidden="true"></i>&nbsp;浏览{$vo.hits}次&nbsp;&nbsp;
+                              <i class="fa fa-heart-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;喜欢{$vo.zan_num}&nbsp;&nbsp;
+                              <i class="fa fa-star-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;收藏{$vo.collect_num}&nbsp;&nbsp;
+                              
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <hr> {/volist} {/empty}
+            <!-- <div class="row">
+                <div class="col-lg-12">
+                    <button type="button" id="load-more" class="btn load-more-btn">加载更多</button>
+                </div>
+            </div> -->
+
+        </div>
+
+    </div>
+    {/block}
+    <!-- 右 -->
+    {block name="right-sider"}
+    <div class="col-lg-3" style="margin-top:10px">
+        <div class="xdd-right-sider">
+            <div class="xdd-right-sider xdd-project-sider-header">
+
+                <a href="{:url('blog/Article/subarticle')}" class="btn project-btn" type="button" target="_blank"><span class="fa fa-edit"></span> 写博客</a>
+            </div>
+            <div class="xdd-right-dianjipaihang">
+                <h2 class="xdd-right-block-title">点击排行</h2>
+                <section class="xdd-right-blok-img xdd-imgscale">
+                    <a href="#"><img src="__IMG__/k.jpg">
+                        <span>6条网页设计配色原则,让你秒变配色高手</span></a>
+                </section>
+                <ul>
+
+                    {volist name="topTen" id="vo" key="k"} {lt name="k" value="4"}
+                    <li>
+                        <i class="label label-danger">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title" target="_blank">{$vo.title}</a>
+                    </li>
+
+                    {else/}
+                    <li>
+                        <i class="label label-primary">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title">{$vo.title}</a>
+                    </li>{/lt} {/volist}
+                </ul>
+            </div>
+        </div>
+
+        <div class="xdd-right-sider">
+            <div class="xdd-right-dianjipaihang">
+                <h2 class="xdd-right-block-title">推荐文章</h2>
+                <section class="xdd-right-blok-img xdd-imgscale">
+                    <a href="#"><img src="__IMG__/k.jpg">
+                        <span></span></a>
+                </section>
+                <ul>
+                    <!-- 推荐文章列表 -->
+                    {volist name="topArticles" id="vo" key="k"} {lt name="k" value="4"}
+                    <li>
+                        <i class="label label-danger">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title" target="_blank">{$vo.title}</a>
+                    </li>
+
+                    {else/}
+                    <li>
+                        <i class="label label-primary">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title">{$vo.title}</a>
+                    </li>
+                    {/lt} {/volist}
+                </ul>
+            </div>
+        </div>
+        <div class="xdd-right-sider">
+            <div class="xdd-right-dianjipaihang">
+                <h2 class="xdd-right-block-title">猜你喜欢</h2>
+                <section class="xdd-right-blok-img xdd-imgscale">
+                    <a href="#"><img src="__IMG__/k.jpg">
+                        <span>6条网页设计配色原则,让你秒变配色高手</span></a>
+                </section>
+                <ul>
+                    <li><i class="label label-danger">1</i><a href="#">十条设计原则教你学会如何设计网页布局!</a></li>
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="xdd-right-sider">
+            <div class="xdd-right-dianjipaihang">
+                <h2 class="xdd-right-block-title">站内公告</h2>
+                <section class="xdd-right-blok-img xdd-imgscale">
+                    <a href="#"><img src="__IMG__/k.jpg">
+                        <span>6条网页设计配色原则,让你秒变配色高手</span></a>
+                </section>
+                <ul>
+                    <li><i class="label label-danger">1</i><a href="#">十条设计原则教你学会如何设计网页布局!</a></li>
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    {/block}
+
+    <!-- 右end -->

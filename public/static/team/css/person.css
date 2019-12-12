@@ -1,0 +1,22 @@
+.main {
+    width: 1000px;
+    margin: 0 auto;
+}
+
+.person-card {
+    height: 200px;
+    margin: 0 auto;
+    background: rgb(212, 207, 207);
+}
+
+.person-info {
+    height: 80px;
+    margin-top: 80px;
+    background: rgb(255, 254, 254);
+}
+
+.listheader {
+    height: 50px;
+    width: 900px;
+    margin-bottom: 20px;
+}

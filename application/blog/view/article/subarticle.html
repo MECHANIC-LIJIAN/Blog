@@ -1,0 +1,522 @@
+{extend name="public/base"} {block name="title"}添加文章{/block} {block name="header"}
+
+<link href="__CSS__/jquery.css" rel="stylesheet">
+<link href="__CSS__/taginput.css" rel="stylesheet">
+<link href="__CSS__/bootstrap-datetimepicker.min.css" rel="stylesheet">
+<link href="__LIB__/bootstrap-fileinput/css/fileinput.min.css" rel="stylesheet">
+<style>
+    .w-e-text-container {
+        height: 500px !important;
+    }
+</style>{/block} {block name="left-sider"}{/block}{block name="container"}
+<div class="col-lg-9">
+    <ul class="tablist">
+        <li id='first-step-li' role="tab" class="first current" aria-disabled="false" aria-selected="true">
+            <a id="formWizard-t-0" href="#formWizard-h-0" aria-controls="formWizard-p-0"><span class="current-info audible">current step: </span><span class="number">1</span> 编写方式</a>
+        </li>
+        <li id='second-step-li' role="tab" class="disabled" aria-disabled="true">
+            <a id="formWizard-t-1" href="#formWizard-h-1" aria-controls="formWizard-p-1"><span class="number">2</span>编辑文章</a>
+        </li>
+        <li id='third-step-li' role="tab" class="disabled last" aria-disabled="true">
+            <a id="formWizard-t-2" href="#formWizard-h-2" aria-controls="formWizard-p-2"><span class="number">3</span>完成发布</a>
+        </li>
+    </ul>
+    <div class="project-first-step">
+        <!-- <form class="edit-project-info"> -->
+        <div class="form-group">
+            <label for="project-title">编写方式选择</label>
+            <select class="form-control" name="form">
+                              <option value="online">在线撰写</option>
+                              <!-- <option value="md">markdown提交</option>
+                              <option value="html">html提交</option>
+                              <option value="jupyter">jupyter提交</option> -->
+                            </select>
+        </div>
+
+        <button type="button" id="project-first-btn" class="btn">下一步</button>
+        <!-- </form> -->
+    </div>
+    <div class="project-second-step displaynone">
+        <form>
+            <div class="form-group edit-method">
+                <div id="">
+
+                </div>
+            </div>
+
+            <!-- <div id='myxheditor' class="displaynone">
+            <label for="project-title">编辑正文</label>
+            <textarea name="content" class="xheditor" rows="30" style="width: 100%;">test</textarea>
+        </div> -->
+            <div class="form-group">
+                <label for="pic_index" class="project-title">文章封面图<span style="color:gray;font-size: 12px">&nbsp;&nbsp;(仅支持1Mb以下的.jpg、.png文件)</span></label>
+                <div>
+                    <input type="file" class="form-control file" id="pic_index" class="file" data-overwrite-initial="false" data-min-file-count="1" />
+                </div>
+                <input type="hidden" id="pic" name="pic">
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="title" class="project-title">文章标题</label>
+                <div>
+                    <input type="text" class="form-control" id="title" name="title" placeholder="文章标题" />
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="desc" class="project-title">文章简介</label>
+                <div>
+                    <textarea class="form-control" id="desc" name="desc" style="width: 100%;margin: 0px;resize:none" rows="3" oninput="font_siz()" placeholder="文章简介，最多100字"></textarea>
+                    <span class="title2 hide">还可以输入<span>100/100</span>字</span>
+                </div>
+            </div>
+            <br>
+            <div id='myxheditor' class="form-group" style="width: 100%;margin: 0px">
+                <label for="content" class="project-title">文章内容</label>
+                <div id="editor" class="editor"></div>
+                <textarea name="content" id="content" class="displaynone"></textarea>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="cateid">所属栏目</label>
+                <div class="xdd-tag-input">
+                    <select id="cateid" name="cateid" class="form-control">
+                        <option value="">请选择</option>
+                        {volist name="articleCates" id="vo"}
+                        <option value="{$vo.id}">{$vo.catename}</option>
+                        {/volist}
+                    </select>
+                </div>
+            </div>
+            <br>
+            <div class="form-group">
+                <label for="TextInput">研究方向</label>
+                <div id="span-list" class="tag-list"></div>
+                <div class="xdd-tag-input">
+                    <input id="form-tags" name="tags" style="display: none;" class="tag-input ui-autocomplete-input" value="" placeholder="输入标签">
+                    <div class="input-group">
+                        <input id='form-tags_tag' class='tag-input form-control' value='' placeholder="输入标签">
+                        <div class="input-group-btn">
+                            <button class="btn pull-right" role="button" data-toggle="collapse" href="#tag-collapse" aria-expanded="false" aria-controls="tag-collapse">
+                                      更多<i class="fa fa-angle-down"></i>
+                                    </button>
+                        </div>
+                    </div>
+                    <div class="collapse" id="tag-collapse">
+                        <div class="well">
+                            <ul id="tag-collapse-ul">
+                                <!--<li><span>人工智能</span></li>
+                                          <li><span>精准医学</span></li>
+                                          <li><span>表观遗传学</span></li>
+                                          <li><span>生物医学工程</span></li>
+                                          <li><span>生物物理</span></li>
+                                          <li><span>计算机</span></li>
+                                          <li><span>软件工程</span></li>
+                                          <li><span>生物物理</span></li>
+                                          <li><span>计算机</span></li>
+                                          <li><span>软件工程</span></li>
+                                          <li><span>生物物理</span></li>
+                                          <li><span>计算机</span></li>
+                                          <li><span>软件工程</span></li>-->
+                            </ul>
+                            <a href="#" class="pull-right" id="update-tagdb">换一批</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <button type="button" id="project-second-btn-prev" class="btn">上一步</button>
+        <button type="button" id="project-second-btn" class="btn">下一步</button>
+    </div>
+    <div class="project-third-step displaynone">
+        <button type="button" id="project-third-btn-prev" class="btn">上一步</button>
+        <button type="button" id="project-third-btn-reset" class="btn">取消</button>
+        <button type="button" id="articleSave" class="btn">保存</button>
+        <button type="button" id="articleAdd" class="btn">立即发布</button>
+    </div>
+
+
+</div>{/block} {block name="js"}
+<script src="__JS__/jquery.ui.js"></script>
+<script src="__JS__/bootstrap-datetimepicker.min.js"></script>
+<script src="__JS__/bootstrap-datetimepicker.zh-CN.js"></script>
+
+<!-- <script type="text/javascript" src="__JS__/xheditor/xheditor-1.2.2.min.js"></script>
+<script type="text/javascript" src="__JS__/xheditor/zh-cn.js"></script>
+ -->
+
+<script type="text/javascript" src="__LIB__/wangEditor/wangEditor.min.js"></script>
+<script type="text/javascript" src="__LIB__/wangEditor/wangEditor-fullscreen-plugin.js"></script>
+<link rel="stylesheet" href="__LIB__/wangEditor/wangEditor-fullscreen-plugin.css">
+
+<script src="__JS__/taginput.js"></script>
+<script>
+    $("#desc").focusin(function() {
+        $(".title").addClass("hide");
+        $(".title2").removeClass("hide")
+    });
+    $("#desc").focusout(function() {
+        $(".title").removeClass("hide");
+        $(".title2").addClass("hide")
+    });
+
+    function font_siz() {
+        var num = $("#desc").val().length;
+        if (num < 100) {
+            $(".title2").html('还可以输入' + '<span></span>' + '字');
+            var all = $(".title2 span").text();
+            $(".title2 span").text(100 - num + "/100");
+        } else {
+            $(".title2").html('已超出' + '<span>0</span>' + '字');
+            var all = $(".title2 span").text();
+            $(".title2 span").css({
+                color: "#ff0011",
+            });
+            $(".title2 span").text(Math.abs(100 - num));
+        }
+
+    }
+
+
+    $('#articleSave').click(function() {
+        $.ajax({
+            url: "{:url('blog/Article/subarticle')}",
+            type: 'post',
+            data: $.param({
+                'status': 0
+            }) + '&' + $('form').serialize(),
+            dataType: 'json',
+            success: function(data) {
+                if (data.code == 1) {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 2000
+                    }, function() {
+                        location.href = data.url;
+                    });
+                } else {
+                    layer.open({
+                        title: "文章添加失败",
+                        content: data.msg,
+                        icon: 5,
+                        anim: 5
+                    })
+                }
+            }
+        });
+
+        return false;
+    });
+
+
+    $('#articleAdd').click(function() {
+        $.ajax({
+            url: "{:url('blog/Article/subarticle')}",
+            type: 'post',
+            data: $.param({
+                'status': 1
+            }) + '&' + $('form').serialize(),
+            dataType: 'json',
+            success: function(data) {
+                if (data.code == 1) {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 2000
+                    }, function() {
+                        location.href = data.url;
+                    });
+                } else {
+                    layer.open({
+                        title: "文章添加失败",
+                        content: data.msg,
+                        icon: 5,
+                        anim: 5
+                    })
+                }
+            }
+        });
+
+        return false;
+    });
+
+
+    $('.xdd-project-sorted>li').on('click', function() {
+        list = $(this);
+        list.siblings('li').removeClass('active');
+        list.siblings('li').find('i').removeClass('sorted-caret-active');
+        list.addClass('active')
+        if (list[0].id !== 'city-dropdown' && list[0].id !== 'sorted-all') {
+            ilist = list.find('i')
+            if (!ilist.first().hasClass('sorted-caret-active') && !ilist.last().hasClass('sorted-caret-active')) {
+                ilist[1].classList.add('sorted-caret-active');
+            } else if (!ilist.first().hasClass('sorted-caret-active') && ilist.last().hasClass('sorted-caret-active')) {
+                ilist[1].classList.remove('sorted-caret-active');
+                ilist[0].classList.add('sorted-caret-active');
+            } else if (ilist.first().hasClass('sorted-caret-active') && !ilist.last().hasClass('sorted-caret-active')) {
+                ilist[0].classList.remove('sorted-caret-active');
+                ilist[1].classList.add('sorted-caret-active');
+            } else {
+                ilist[1].classList.add('sorted-caret-active');
+            }
+        }
+
+    });
+
+    function addTagDB(tag_json) {
+        taglist = $('#form-tags').val().split(',');
+        //		  	console.log(taglist)
+        for (var i = 0; i < tag_json.length; i++) {
+            var labels = tag_json[i];
+            var res = $.inArray(labels.name, taglist);
+            if (res === -1) {
+                $("#tag-collapse-ul").append(" <li><span>" + labels.name + "</span></li>");
+            } else {
+                $("#tag-collapse-ul").append(" <li class='xdd-tag-selected'><span>" + labels.name + "</span></li>");
+            }
+
+        }
+    }
+    var tags = [{
+        'name': '人工智能'
+    }, {
+        'name': '软件工程'
+    }, {
+        'name': '数学'
+    }, {
+        'name': '生物信息'
+    }, {
+        'name': '外语'
+    }, {
+        'name': '语文'
+    }];
+    addTagDB(tags)
+        // 更新标签库
+    function updateTagDB(tag_json) {
+        $("#tag-collapse-ul li").remove();
+        addTagDB(tag_json);
+    }
+    $('#update-tagdb').on('click', function() {
+            var new_tags = [{
+                'name': '软件工程'
+            }, {
+                'name': '英语'
+            }, {
+                'name': '生物'
+            }, {
+                'name': '物理'
+            }, {
+                'name': '化学'
+            }];
+            updateTagDB(new_tags)
+        })
+        // 标签云
+    $('#form-tags').tagsInput({
+        'autocomplete': {
+            source: [
+                '生物医学工程',
+                '软件工程',
+                '人工神经网络',
+                '人工智能',
+                '数学'
+            ]
+        },
+        'delimiter': [',']
+    });
+
+    // 标签库点击事件
+    $("#tag-collapse").on("click", "li", function() {
+        if ($(this).hasClass("xdd-tag-selected")) {
+            return false;
+        } else {
+            var value = $(this).text();
+            if ($("#form-tags").tagExist(value)) {
+                alert('标签已存在')
+            } else {
+                if ($("#form-tags").val() !== "") {
+                    var taglist = $("#form-tags").val().split(',');
+                    taglist.push(value);
+                } else {
+                    var taglist = [value];
+                }
+                $("form-tags_tagsinput").tagsInput.importTags($("#form-tags"), value)
+                $("form-tags_tagsinput").tagsInput.updateTagsField($("#form-tags"), taglist)
+
+                $(this).addClass("xdd-tag-selected")
+            }
+
+        }
+    });
+    $('#project-date input').datepicker({
+        language: 'zh-CN',
+        format: 'yyyy-mm-dd',
+    });
+
+    // 项目信息填写
+    $('.project-first-step select').on("change", function() {
+        var mode_json = {
+            '1': '元',
+            '2': '共同作者',
+            '3': '面议',
+            '4': '填写说明'
+        }
+        var id = this.value;
+        $('#project-mode').attr('placeholder', mode_json[id]);
+    })
+    $('#project-first-btn').on('click', function() {
+        $('#first-step-li').removeClass('current');
+        $('#second-step-li').addClass('current');
+        $('.project-first-step').addClass('displaynone');
+        $('.project-second-step').removeClass('displaynone');
+        var postfile = $('.project-first-step select').val()
+
+        if (postfile !== 'online') {
+            $('.project-second-step .edit-method div').remove()
+            $('#myxheditor').addClass('displaynone')
+            $('.project-second-step .edit-method').append(
+                '<div class="form-group edit-method">' +
+                '<label for="project-file">附件(<2M的文件)</label>' +
+                '<div class="input-group">' +
+                '<input id="location" name="project-file-name" class="form-control" onclick="$(\'#i-file\').click();">' +
+                '<label class="input-group-btn">' +
+                '<input type="button" id="i-check" value="浏览文件" class="btn" onclick=\"$(\'#i-file\').click();">' +
+                '</label>' +
+                '</div>' +
+                '<input type="file"  id="i-file"  accept=."' + postfile + '" onchange="$(\'#location\').val($(\'#i-file\').val());" style="display: none">' +
+                '</div>'
+            )
+        } else {
+            $('.project-second-step .edit-method div').remove()
+            $('#myxheditor').removeClass('displaynone')
+        }
+    });
+    $('#project-second-btn').on('click', function() {
+        $('#second-step-li').removeClass('current');
+        $('#third-step-li').addClass('current');
+        $('.project-second-step').addClass('displaynone');
+        $('.project-third-step').removeClass('displaynone');
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+        //				$('.project-third-step li').remove();
+        //				$('.project-third-step ul').append(
+        //					
+        //				)
+    });
+    $('#project-second-btn-prev').on('click', function() {
+        $('#second-step-li').removeClass('current');
+        $('#first-step-li').addClass('current');
+        $('.project-second-step').addClass('displaynone');
+        $('.project-first-step').removeClass('displaynone');
+        document.body.scrollTop = document.documentElement.scrollTop = 0;
+    });
+    $('#project-third-btn-prev').on('click', function() {
+        $('#third-step-li').removeClass('current');
+        $('#second-step-li').addClass('current');
+        $('.project-third-step').addClass('displaynone');
+        $('.project-second-step').removeClass('displaynone');
+    });
+    $('#project-third-btn-reset').on('click', function() {
+        $('#third-step-li').removeClass('current');
+        $('#first-step-li').addClass('current');
+        $('.project-third-step').addClass('displaynone');
+        $('.project-first-step').removeClass('displaynone');
+    });
+
+
+
+
+    var E = window.wangEditor;
+    var editor = new E('#editor');
+
+    var $text1 = $('#content');
+    editor.customConfig.onchange = function(html) {
+        // 监控变化，同步更新到 textarea
+        $text1.val(html)
+    };
+    //绿色部分是对图片的设置，本地上传
+    editor.customConfig.debug = true;
+    editor.customConfig.uploadFileName = 'image'; //上传的文件名
+    // 或者 var editor = new E( document.getElementById('editor') )
+    editor.customConfig.uploadImgServer = "{:url('blog/Article/upload')}"; // 上传图片到服务器
+    editor.customConfig.uploadImgMaxSize = 3 * 1024 * 1024; //图片的尺寸
+    editor.customConfig.uploadImgMaxLength = 5; //最多上传多少
+    editor.customConfig.menus = [
+        'head', // 标题
+        'bold', // 粗体
+        'fontSize', // 字号
+        'fontName', // 字体
+        'italic', // 斜体
+        'underline', // 下划线
+        'strikeThrough', // 删除线
+        'foreColor', // 文字颜色
+        'backColor', // 背景颜色
+        'link', // 插入链接
+        'list', // 列表
+        'justify', // 对齐方式
+        'quote', // 引用
+        'emoticon', // 表情
+        'image', // 插入图片
+        'table', // 表格
+        'code', // 插入代码
+        'undo', // 撤销
+        'redo' // 重复
+    ];
+    editor.create();
+    E.fullscreen.init('#editor');
+    $text1.val(editor.txt.html())
+</script>
+
+<!-- 主文件输入插件文件 -->
+<script type="text/javascript" src="__LIB__/bootstrap-fileinput/js/fileinput.min.js"></script>
+<script>
+    $("#pic_index").fileinput({
+            language: 'zh', //设置语言
+            uploadUrl: "{:url('blog/Article/uploadIndex')}", //上传的地址
+            allowedFileExtensions: ['jpg', 'png'], //接收的文件后缀,
+            uploadAsync: true, //默认异步上传
+            showUpload: false, //是否显示上传按钮
+            showRemove: true, //显示移除按钮
+            showCaption: false, //是否显示标题
+            dropZoneEnabled: false, //是否显示拖拽
+            layoutTemplates: {
+                actionUpload: '', //去除上传预览缩略图中的上传图片
+                actionDelete: '' //去除上传预览的缩略图中的删除图标
+            },
+            maxFileCount: 1, //允许同时上传的最大文件个数
+            enctype: 'multipart/form-data',
+            browseClass: "btn btn-primary", //按钮样式
+            maxFilesNum: 1, //上传最大文件数量
+            previewFileType: "image",
+            maxFileCount: 1,
+            maxFileSize: 1024,
+            showBrowse: true,
+            browseLabel: "选择文章封面",
+            uploadClass: "btn btn-info",
+            uploadLabel: "上传",
+            removeClass: "btn btn-danger",
+            autoReplace: true,
+            removeLabel: "移除",
+            previewFileIcon: "<i class='glyphicon glyphicon-king'></i>", //当检测到用于预览的不可读文件类型时，将在每个预览文件缩略图中显示的图标。默认为<i class="glyphicon glyphicon-file"></i>  
+            msgSizeTooLarge: '图片太大！最大允许1024KB',
+            msgFilesTooMany: "选择上传的文件数量为({n}) 超过允许的最大数值({m})！",
+            msgUploadEnd: '图片上传成功！',
+            msgUploadBegin: '初始化中...',
+            msgZoomModalHeading: '图片详情预览',
+            msgInvalidFileExtension: '非法文件扩展名 "{name}"！ 仅支持 "{extensions}" 的文件扩展名！'
+        }).on("filebatchselected", function(event, files) {
+            $(this).fileinput("upload");
+        })
+        .on('fileerror', function(event, data, msg) {
+            alert('图片上传失败！');
+            $(event.target)
+                .fileinput('clear')
+                .fileinput('unlock')
+            $(".btn-file").removeClass("hidden")
+        }).on('fileuploaded', function(event, data) {
+            // console.log(data.response.data[0])
+            $("#pic").val(data.response.data[0]);
+            $('#pic_index').fileinput('disable');
+            $(".btn-file").addClass("hidden")
+        }).on('fileclear', function(event) {
+            $(".btn-file").removeClass("hidden")
+        });
+</script>
+{/block}

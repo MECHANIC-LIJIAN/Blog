@@ -1,0 +1,58 @@
+{extend name="Common@base/base"} {block name="curent"}
+<li class="active"><a href="{:url('plot/Index/index')}">绘图</a></li>
+<li><a href="{:url('blog/Index/index')}">博客</a></li>
+{/block}
+<!-- 左 -->
+{block name="left-sider"}
+<div class="col-lg-1 xdd-sider-div">
+    <ul class="xdd-sider-ul">
+        {if $catename=="Plot"}
+        <li class="active">
+            <a href="{:url('plot/Index/index')}">全部</a>
+        </li>
+        {volist name="picCates" id="cate"}
+        <li>
+            <a href="{:url('plot/Index/cate',['catename'=>$cate.catename])}">{$cate.catename}</a>
+        </li>
+        {/volist} {else/}
+        <li>
+            <a href="{:url('plot/Index/index')}">全部</a>
+        </li>
+        {volist name="picCates" id="cate"}
+        <!-- 判断是否选中 -->
+        {if $cate.catename==$catename}
+        <li class="active">
+            <a href="{:url('plot/Index/cate',['catename'=>$cate.catename])}">{$cate.catename}</a>
+        </li>
+        {else /}
+        <li>
+            <a href="{:url('plot/Index/cate',['catename'=>$cate.catename])}">{$cate.catename}</a>
+        </li>
+        {/if} {/volist} {/if}
+    </ul>
+</div>
+{/block}{block name="container"} {/block} {block name="right-sider"}
+<div class="col-lg-3">
+    <div class="xdd-right-sider">
+        <div class="xdd-right-sider xdd-project-sider-header">
+            <a href="{:url('plot/Plot/create')}" class="btn project-btn" type="button" target="_blank"><span class="fa fa-edit"></span>新建绘图</a>
+        </div>
+        <div class="xdd-right-dianjipaihang">
+            <h2 class="xdd-right-block-title">点击排行</h2>
+            <section class="xdd-right-blok-img xdd-imgscale">
+                <span>6条网页设计配色原则,让你秒变配色高手</span>
+            </section>
+            <ul>
+                {volist name="topTen" id="vo" key="k"} {lt name="k" value="4"}
+                <li>
+                    <i class="label label-danger">{$k}</i> <a href="{:url('plot/Plot/read',['id'=>$vo.id])}" class="title" target="_blank">{$vo.title}</a>
+                </li>
+
+                {else/}
+                <li>
+                    <i class="label label-primary">{$k}</i> <a href="{:url('plot/Plot/read',['id'=>$vo.id])}" class="title">{$vo.title}</a>
+                </li>{/lt} {/volist}</ul>
+        </div>
+    </div>
+</div>
+{/block}

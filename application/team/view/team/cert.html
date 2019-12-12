@@ -1,0 +1,146 @@
+{extend name="public/base"}
+
+
+{block name="title"} 团队认证 {/block}
+
+
+{block name="container"}
+
+<div class="am-u-md-8">
+
+    <div class="xdd-block-background">
+        欢迎您，尊敬的{$info.username}，请您填入以下信息：
+        <form>
+
+            <div>
+                <input type="hidden" name="" value="{$info.id}">
+            </div>
+            <div>
+                <span>省份</span>
+                <select id="province" name="province" class="">
+                    <option value="" selected="selected">-- 请选择所在省份 --</option>
+                    {volist name="province" id="vo"}
+                    <option value="{$vo.id}">{$vo.cityname}</option>
+                    {/volist}
+                </select>
+            </div>
+            <div>
+                <span>市</span>
+                <select id="city" name="city" class="">s
+                    <option value="" selected="selected">-- 请选择所在城市 --</option>
+                </select>
+            </div>
+            <div>
+                <span>所属机构</span>
+                <input type="text" id="institution" name="institution" placeholder="所属机构">
+            </div>
+            <div>
+                <span>机构类型</span>
+                <select id="type" name="type" class="">
+                    <option value="" selected="selected">-- 请选择机构类型 --</option>
+                    <option value="高校">高校</option>
+                    <option value="公司">公司</option>
+                    <option value="科研院所">科研院所</option>
+                    <option value="其他">其他</option>
+                </select>
+            </div>
+            <div>
+                <span>团队名称</span>
+                <input type="text" id="teamname" name="teamname" class="" placeholder="请输入团队名称">
+            </div>
+            <div>
+                <span>研究方向</span>
+                <input type="text" id="major" name="major" class="" placeholder="请输入主要研究方向">
+            </div>
+            <div>
+                <span>负责人</span>
+                <input type="text" id="boss" name="boss" class="" placeholder="请输入团队负责人">
+            </div>
+            <div>
+                <span>通讯邮箱</span>
+                <input type="email" id="email" name="email" class="" placeholder="请输入通讯邮箱">
+            </div>
+            <div>
+                <span>简介</span>
+                <textarea id="desc" name="desc" class="" rows="5" cols="60"></textarea>
+            </div>
+            <button type="button" id="tijiao">提交</button>
+        </form>
+
+
+    </div>
+</div>
+
+{/block}
+
+{block name="js"}
+{__block__}
+
+
+<script>
+
+
+    $(function () {
+        /*
+        请求城市列表
+        */
+
+        $('#province').click(function () {
+            var province = $(this).val();
+            $.ajax({
+                type: "post",
+                url: "{:url('team/Team/city')}",
+                data: {
+                    province: province
+                },
+                dataType: "json",
+                success: function (data) {
+                    $('#city option').remove();
+                    $('#city').append("<option value='0' selected='selected'>-- 请选择 --</option>");
+                    for (var i in data) {
+                        $('#city').append("<option value='" + data[i].id + "'>" + data[i].cityname + "</option>")
+                    }
+                }
+            });
+        });
+
+
+        $("#tijiao").click(function () {
+
+            $.ajax({
+                type: "post",
+                url: "{:url('team/Team/cert')}",
+                data:$("form").serialize(),
+                dataType: "json",
+                success: function (data) {
+                    if (data.code == 1) {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 2000
+                        }, function () {
+                            location.href = data.url;
+                        });
+                    } else{
+                        layer.open({
+                            title: '提交失败',
+                            content: data.msg,
+                            icon: 5,
+                            anim: 5
+                        });
+                    }
+                }
+            });
+
+            return false;
+        })
+
+
+
+
+
+
+    });
+
+
+</script>
+{/block}

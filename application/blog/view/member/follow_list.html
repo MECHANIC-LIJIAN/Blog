@@ -1,0 +1,71 @@
+{extend name="public/person_base"} {block name="title"}{$memberInfo.nickname}的关注{/block}{block name="header"}
+
+<style>
+    .person-cate a {
+        color: black;
+    }
+</style>
+{/block} {block name="container"}
+<div class="xdd-person-list row xdd-block-background">
+    {volist name="followlist" id="vo"}
+    <div class="col-md-6">
+        <a href="#" class="">
+            <div class="flip-container">
+                <div class="team-card">
+                    <div class="team-card-up">
+                        <div class="team-card-head pull-left">
+                            <img src="{$vo.member_follow.pic}" width="100" height="100" class="" />
+                        </div>
+                        <div class="team-card-info pull-right">
+                            <ul>
+                                <li class="team-card-name">{$vo.member_follow.nickname}<span>个人</span> <span class="fa fa-map-marker">&nbsp;{$vo.member_follow.province}&nbsp;{$vo.member_follow.city}</span></li>
+                                <li>
+                                    {volist name="$vo.member_follow.major|strToArray" id="major"}
+                                    <span class="label label-default">{$major}</span> {/volist}
+                                </li>
+                                <li class="team-card-info-description">{$vo.member_follow.desc}</li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="team-card-down">
+                        <div class="team-card-down-table">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td><i class="fa fa-user"></i></td>
+                                        <td><span>姓名</span></td>
+                                        <td><b>:</b></td>
+                                        <td>{$vo.member_follow.nickname}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-phone-square"></i></td>
+                                        <td><span>电话</span></td>
+                                        <td><b>:</b></td>
+                                        <td>{$vo.member_follow.phone}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><i class="fa fa-envelope"></i></td>
+                                        <td><span>邮箱</span></td>
+                                        <td><b>:</b></td>
+                                        <td>{$vo.member_follow.email}</td>
+                                    </tr>
+
+                                    <tr>
+                                        <td><i class="fa fa-file"></i></td>
+                                        <td><span>文章数</span></td>
+                                        <td><b>:</b></td>
+                                        <td>{$vo.member_follow.article_num}</td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                        <button class="btn pull-right">保存名片</button>
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+    {/volist}
+
+</div>{/block}

@@ -1,0 +1,309 @@
+{extend name="public/base" /}
+<!-- 网页标题 -->
+{block name="title"} {$catename|default="Blog"} {/block} {block name="container"}
+
+<div class="col-lg-8">
+    <div class="xdd-blog-slider">
+        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+            <!-- Indicators -->
+            <ol class="carousel-indicators">
+                <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+                <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            </ol>
+
+            <!-- Wrapper for slides -->
+            <div class="carousel-inner" role="listbox">
+                <div class="item active">
+                    <img src="__IMG__/home-bg.jpg" alt="...">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>Another example headline.</h1>
+                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                            <p><a class="btn btn-sm btn-info" href="#" role="button">Learn more</a></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="item">
+                    <img src="__IMG__/home-bg.jpg" alt="...">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>Another example headline.</h1>
+                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                            <p><a class="btn btn-sm btn-info" href="#" role="button">Learn more</a></p>
+                        </div>
+                    </div>
+
+                </div>
+                <div class="item">
+                    <img src="__IMG__/home-bg.jpg" alt="...">
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>Another example headline.</h1>
+                            <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>
+                            <p><a class="btn btn-sm btn-info" href="#" role="button">Learn more</a></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="xdd-block-background">
+
+        {volist name="articleList" id="vo"}
+        <div class="row">
+            {if $vo.pic!=null}
+
+            <div class="col-lg-3">
+                <div class="xdd-blog-img xdd-imgscale">
+                    <a href="{:url('blog/Article/info',['id'=>$vo.id])}" target="_blank"><img src="{$vo.pic}" alt="" class=""></a>
+                </div>
+            </div>
+            <div class="col-lg-9">
+                {else /}
+                <div class="col-lg-12">
+                    {/if}
+                    <div class="xdd-blog-text xdd-blog-text-img">
+                        <h2><a href="{:url('blog/Article/info',['id'=>$vo.id])}" target="_blank">{$vo.title}</a></h2>
+                        <p>{$vo.desc}...</p>
+                        <p>
+                            <span class="xdd-blog-user"> 
+                                <a href="{:url('blog/Member/person',['id'=>$vo.members.member_id])}" target="_blank"><img  width="30" height="30" src="{$vo.members.pic}" /></a>
+
+                                <h5><a title="{$vo.members.nickname}的主页" href="{:url('blog/Member/person',['id'=>$vo.members.member_id])}"
+                                    target="_blank">{$vo.members.nickname}</a></h5>
+                        </span>
+                            <span class="xdd-blog-articleinfo">
+                              <i class="" aria-hidden="true"></i>&nbsp;{$vo.update_time}&nbsp;&nbsp;
+                              <i class="" aria-hidden="true"></i>&nbsp;浏览{$vo.hits}次&nbsp;&nbsp;
+                              <i class="fa fa-heart-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;喜欢{$vo.zan_num}&nbsp;&nbsp;
+                              <i class="fa fa-star-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;收藏{$vo.collect_num}&nbsp;&nbsp;
+                              
+                            </span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <hr> {/volist}
+            <div class="row">
+                <div class="col-lg-12">
+                    <button type="button" id="load-more" class="btn load-more-btn">加载更多</button>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+    {/block}
+    <!-- 底部js -->
+    {block name="js"}
+    <script type="text/javascript">
+        // 异步请求
+        var pageIndex = 3;
+        $('#load-more').on('click', function() {
+            var btn = $(this);
+            btn.html('正在加载<i class="fa fa-spinner fa-spin"></i>');
+            pageIndex++;
+            $.ajax({
+                url: "{:url('blog/Index/list')}",
+                type: "post",
+                dataType: 'json',
+                data: {
+                    pageIndex: pageIndex,
+                    cateId: "{:$cateId}",
+                    keyword: "{:$keyword}"
+                },
+                success: function(json) {
+                    btn.html('加载更多');
+                    var msg = json["rows"];
+
+                    var listLength = msg.length;
+
+                    if (listLength == 0) {
+                        pageIndex--;
+                        btn.html('暂无更多数据');
+                        //alert(pageIndex);
+                    } else {
+                        for (var i = 0; i < listLength; i++) {
+                            var jsonForeach = msg[i];
+                            var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+                            var url = "{:url('blog/Article/info',[id=>'data_id'])}"
+                            url = url.replace('data_id', jsonObjForeach["id"]);
+                            var url_user = "{:url('blog/Member/person',[id=>'data_id'])}"
+                            url_user = url_user.replace('data_id', jsonObjForeach["member_id"])
+                            if (jsonObjForeach["pic"] != null) {
+                                var str = '<div class="row"><div class="col-lg-3"><div class="xdd-blog-img xdd-imgscale"><a href="' + url + '" target="_blank"><img src="' + jsonObjForeach["pic"] + '" alt="" class=""></a></div></div><div class="col-lg-9">';
+                            } else {
+                                var str = '<div class="row"><div class="col-lg-12">';
+                            }
+
+                            str = str + '<div class="xdd-blog-text xdd-blog-text-img">';
+                            str =
+                                str +
+                                '<h2><a href="' +
+                                url +
+                                '" target="_blank">' + jsonObjForeach["title"] + '</a></h2>';
+                            str =
+                                str +
+                                '<p>' + jsonObjForeach["desc"] + '</p><p><span class="xdd-blog-user">';
+                            str =
+                                str +
+                                '<a href="' + url_user + '" target="_blank"><img width="30" height="30" src="' + jsonObjForeach["members"]["pic"] + '"></a>';
+                            str =
+                                str + '<h5><a href="' + url_user + '" target="_blank">' + jsonObjForeach["members"]["nickname"] + '</a></h5></span>';
+                            str = str + '<span class="xdd-blog-articleinfo">';
+                            str =
+                                str +
+                                '<i class="" aria-hidden="true"></i>&nbsp;' +
+                                jsonObjForeach["update_time"] +
+                                "&nbsp;&nbsp;";
+                            str =
+                                str +
+                                '<i class="" aria-hidden="true"></i>&nbsp;浏览' +
+                                jsonObjForeach["hits"] +
+                                "&nbsp;&nbsp;";
+                            str =
+                                str +
+                                '<i class="fa fa-heart-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;喜欢' + jsonObjForeach["zan_num"] + '&nbsp;&nbsp;';
+                            str =
+                                str +
+                                '<i class="fa fa-star-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;收藏' + jsonObjForeach["collect_num"] + '&nbsp;&nbsp;';
+                            str =
+                                str +
+                                '<i class="fa fa-share" style="color: red;"></i>&nbsp;分享&nbsp;&nbsp;';
+                            str = str + "</span></p></div></div></div><hr>";
+
+                            btn.parent().parent().before(str);
+
+                        }
+                    }
+                },
+            });
+        })
+
+
+        // window.onscroll = function() {
+        //     if (getScrollTop() + getClientHeight() == getScrollHeight()) {
+        //         pageIndex++;
+        //         $.ajax({
+        //             url: "{:url('blog/Index/list')}",
+        //             type: "post",
+        //             data: {
+        //                 pageIndex: pageIndex,
+        //                 cateId: "{:$cateId}",
+        //                 keyword: "{:$keyword}"
+        //             },
+        //             dataType: "json",
+        //             success: function(json) {
+        //                 var msg = json["rows"];
+
+        //                 var listLength = msg.length;
+
+        //                 if (listLength == 0) {
+        //                     pageIndex--;
+        //                     //alert(pageIndex);
+        //                 } else {
+        //                     for (var i = 0; i < listLength; i++) {
+        //                         var jsonForeach = msg[i];
+        //                         var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+        //                         var url =
+        //                             "{:url('blog/Article/info')}?id=" + jsonObjForeach["id"];
+        //                         var url_user = "{:url('blog/Member/person')}?id=" + jsonObjForeach["members"]["member_id"]
+        //                             // var str = '<div class="article-list-item">';
+        //                             // str = str + '<a href= ' + url + ' class="title">' + + '</a> ';
+        //                             // str = str + '<div class ="info"><span class="author">作者：' + jsonObjForeach['members']['nickname'] + '</span>&nbsp;&nbsp;';
+        //                             // str = str + '<span class ="time">更新于：' + jsonObjForeach['update_time'] + '</span>&nbsp;&nbsp;';
+        //                             // str = str + '<span class="comms ">评论数：' + jsonObjForeach['comms'] + '</span>&nbsp;&nbsp;';
+        //                             // str = str + '<span class ="hits">点击量：' + jsonObjForeach['hits'] + '</span></div></div>';
+
+        //                         var str =
+        //                             '<article class="am-g"><div class="xdd-blog-img xdd-imgscale">';
+        //                         str =
+        //                             str +
+        //                             '<a href="' +
+        //                             url +
+        //                             '" target="_blank"><img src="' + jsonObjForeach["pic"] + '" alt="" class=""></a></div>';
+        //                         str = str + '<div class="xdd-blog-text xdd-blog-text-img">';
+        //                         str =
+        //                             str +
+        //                             '<h2><a href="' +
+        //                             url +
+        //                             '" target="_blank">' + jsonObjForeach["title"] + '</a></h2>';
+        //                         str =
+        //                             str +
+        //                             '<p>我们一直在坚持着...</p><p><span class="xdd-blog-user">';
+        //                         str =
+        //                             str +
+        //                             ' <a href="' + url_user + '" target="_blank"><img width="30" height="30" alt="author" class="" src="' + jsonObjForeach["members"]["pic"] + '"></a>';
+        //                         str =
+        //                             str + '<a href="' + url_user + '" target="_blank">' + jsonObjForeach["members"]["nickname"] + '</a></span></span>';
+        //                         str = str + '<span class="xdd-blog-articleinfo">';
+        //                         str =
+        //                             str +
+        //                             '<i class="" aria-hidden="true"></i>&nbsp;' +
+        //                             jsonObjForeach["update_time"] +
+        //                             "&nbsp;&nbsp;";
+        //                         str =
+        //                             str +
+        //                             '<i class="" aria-hidden="true"></i>&nbsp;' +
+        //                             jsonObjForeach["hits"] +
+        //                             "&nbsp;&nbsp;";
+        //                         str =
+        //                             str +
+        //                             '<i class="am-icon-heart-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;喜欢&nbsp;&nbsp;';
+        //                         str =
+        //                             str +
+        //                             '<i class="am-icon-star-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;收藏&nbsp;&nbsp;';
+        //                         str =
+        //                             str +
+        //                             '<i class="am-icon-share" style="color: red;"></i>&nbsp;分享&nbsp;&nbsp;';
+        //                         str = str + "</span></p></div></article>";
+        //                         $(".xdd-block-background").append(str);
+        //                     }
+        //                 }
+        //             }
+        //         });
+        //     }
+        // };
+
+        // //获取滚动条当前的位置
+        // function getScrollTop() {
+        //     var scrollTop = 0;
+        //     if (document.documentElement && document.documentElement.scrollTop) {
+        //         scrollTop = document.documentElement.scrollTop;
+        //     } else if (document.body) {
+        //         scrollTop = document.body.scrollTop;
+        //     }
+        //     return scrollTop;
+        // }
+
+        // //获取当前可是范围的高度
+        // function getClientHeight() {
+        //     var clientHeight = 0;
+        //     if (document.body.clientHeight && document.documentElement.clientHeight) {
+        //         clientHeight = Math.min(
+        //             document.body.clientHeight,
+        //             document.documentElement.clientHeight
+        //         );
+        //     } else {
+        //         clientHeight = Math.max(
+        //             document.body.clientHeight,
+        //             document.documentElement.clientHeight
+        //         );
+        //     }
+        //     return clientHeight;
+        // }
+
+        // //获取文档完整的高度
+        // function getScrollHeight() {
+        //     return Math.max(
+        //         document.body.scrollHeight,
+        //         document.documentElement.scrollHeight
+        //     );
+        // }
+    </script>
+
+    {/block}

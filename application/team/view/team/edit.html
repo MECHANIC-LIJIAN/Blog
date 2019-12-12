@@ -1,0 +1,245 @@
+{extend name="public/base"} {block name="title"} 编辑{$teamInfo.teamname}的资料 {/block}
+<!-- 引入头文件 -->
+{block name="header"}
+<!-- 引入原有文件 -->
+{__block__}
+<!-- 引入自定义css -->
+<link rel="stylesheet" href="__CSS__/person.css">
+<style>
+    #header_box {
+        width: 100%;
+        height: 200px;
+        border: 1px solid #fff;
+        border-radius: 100%;
+        position: relative;
+    }
+
+    #header_box img {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+    }
+
+    #header_box input:hover,
+    img:hover {
+        cursor: pointer;
+    }
+
+    #header_box input {
+        opacity: 0;
+        z-index: 100;
+    }
+
+    #heder_box img {
+        background-color: #ececec;
+    }
+
+    .user-pic {
+        width: 198px;
+        height: 100%;
+        position: absolute;
+        left: 40%;
+        top: 60%;
+        transform: translate(-50%, -50%);
+    }
+</style>
+
+{/block}
+{block name="container"}
+
+
+<div class="xdd-team-detail-head">
+    <!-- {if $teamInfo.pic!=null}
+        <img src="{$teamInfo.pic}" alt="" id="userpic" name="userpic" class="xdd-team-detail-backimg" alt="" /> {else /}
+        <img src="__IMG__/moren.jpg" alt="" id="userpic" name="userpic" /> {/if} -->
+
+    <div class="xdd-team-detail-headname">
+        <h1><a href="{:url('blog/Member/person',['id'=>$teamInfo.member_id])}">{$teamInfo.teamname}</a></h1>
+        <ul class="xdd-team-detail-headul">
+            <li>
+                <p>{$teamInfo.follow.follow_num}</p>关注
+            </li>
+            <li>
+                <p>{$teamInfo.follow.followed_num}</p>粉丝
+            </li>
+            <li>
+                <p>{$teamInfo.article_num}</p>文章
+            </li>
+            <li>
+                <p>134665</p>贡献字数
+            </li>
+        </ul>
+    </div>
+
+    <a href="{:url('team/Team/team',['id'=>$teamInfo.team_id])}">
+        <img src="{$teamInfo.pic}" style="width: 150px;" class="am-circle xdd-team-detail-headimg"/> </a>
+
+    <div class="xdd-team-detail-write">
+        {if $teamInfo.member_id!=session('member.id')}
+        {if $follow ==null}
+        <button id="follow" style="background-color:#0084ff;float: right;width: 100px" onselectstart="return false;">
+            关注TA
+        </button>
+        {else /}
+        <button id="follow" style="background-color:#a0a0a0;float: right;width: 100px" onselectstart="return false;">
+            已关注
+        </button>
+        {/if}
+        {else /}
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-lg">
+                <button id="subarticle" type="button" class="am-btn"><span class="am-icon-bars"></span>发布项目</button>
+            </div>
+        </div>
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-lg">
+                <a href="{:url('blog/Article/subarticle')}" target="_blank">
+                    <button type="button" class="am-btn"><span
+                            class="am-icon-pencil"></span>发布博客
+                    </button>
+                </a>
+            </div>
+        </div>
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-lg">
+                <button id="editInfo" class="am-btn" onselectstart="return false;">
+                    编辑团队资料
+                </button>
+            </div>
+        </div>
+        {/if}
+    </div>
+</div>
+
+<form id="info" class="form-horizontal" style="height: 500px">
+    <input type="hidden" id="id" name="id" value="{$teamInfo.id}"/>
+    <div id="header_box">
+        <div class="user-pic">
+            <img src="{$teamInfo.pic}" alt="" id="userpic" name="userpic"/>
+            <input style="width: 200px;height:200px" type="file" id="usericon">
+        </div>
+        <input type="hidden" name="icon" id="icon">
+    </div>
+    <div class="form-group row-sm-3" style="margin-top: 30px">
+        <label for="institution" class="col-sm-2 control-label no-padding-right">机构</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="institution" name="institution" placeholder="隶属机构"
+                   value="{$teamInfo.institution}"/>
+        </div>
+    </div>
+    <div class="form-group row-sm-3">
+        <label for="teamname" class="col-sm-2 control-label no-padding-right">团队名</label>
+        <div class="col-sm-6">
+            <input type="text" class="form-control" id="teamname" name="teamname" placeholder="团队名"
+                   value="{$teamInfo.teamname}"/>
+        </div>
+    </div>
+    <div class="form-group row-sm-3">
+        <label for="address" class="col-sm-2 control-label no-padding-right">团队名</label>
+        <div class="">
+            <input type="text" class="text-info" id="address" name="address" placeholder="通讯地址"
+                   value="{$teamInfo.address}"/>
+        </div>
+    </div>
+    <div class="form-group row-sm-3">
+        <label for="desc" class="col-sm-2 control-label no-padding-right">团队简介</label>
+        <div class="col-sm-6">
+            <textarea class="text-info" cols="100" rows="10" id="desc" name="desc">"{$teamInfo.desc}"</textarea>
+        </div>
+    </div>
+    <button id="saveInfo">保存</button>
+</form>
+<input id="member_id" type="hidden" value="{$teamInfo.id}"/> {/block}
+
+{block name="js"}
+<script type="text/javascript">
+    $(function () {
+        /*
+         * 编辑个人资料
+         *
+         */
+        $("#saveInfo").click(function () {
+            if ("{:session('?member.id')}") {
+
+                $.ajax({
+                    url: "{:url('team/Team/edit')}",
+                    type: "post",
+                    data: $("#info").serialize(),
+                    dataType: "json",
+                    success: function (data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                location.href = data.url;
+                            });
+                        } else {
+                            layer.open({
+                                title: '更新失败！',
+                                content: data.msg,
+                                icon: 5,
+                                anim: 5
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function () {
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+        });
+    });
+
+
+    function upimg(obj) {
+        if (obj.value == "") {
+            return;
+        }
+        var formdata = new FormData();
+        formdata.append("img", $(obj)[0].files[0]);//获取文件
+        $.ajax({
+            type: 'post',
+            url: "{:url('team/Team/icon')}", //接口
+            data: formdata,
+            cache: false,
+            processData: false, // 不处理发送的数据，因为data值是Formdata对象，不需要对数据做处理
+            contentType: false, // 不设置Content-type请求头
+            success: function (response) {
+                if (response.code == 1) {
+                    $("#userpic").attr("src", response.data)
+                    $("#icon").attr("value", response.data)
+                } else {
+                    $("#usericon").reset()
+                }
+            }
+
+        });
+    }
+
+    $("#usericon").on("change", function () {
+        var file = this.files[0]
+        var index = file.name.lastIndexOf(".");
+        var type = file.name.substring(index);
+        if (type != ".jpg" && type != ".png") {
+            alert("只能上传jpg和png格式的图片！！");
+            return;
+        }else{
+            upimg(this)
+        }
+
+    });
+</script>
+
+{/block}

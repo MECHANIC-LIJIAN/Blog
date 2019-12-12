@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" type="IMG/x-icon" href="/favicon.ico" />
+    <title>登录</title>
+    <!-- Bootstrap core CSS -->
+    <link href="__CSS__/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap theme -->
+    <link href="__CSS__/bootstrap-theme.min.css" rel="stylesheet">
+    <link href="__FONT__/css/font-awesome.css" rel="stylesheet">
+    <link href="__CSS__/mysite.css" rel="stylesheet">
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!--<link href="../static/css/ie10-viewport-bug-workaround.css" rel="stylesheet">-->
+
+    <!-- Custom styles for this template -->
+    <!--<link href="theme.css" rel="stylesheet">-->
+
+    <!-- Just for debugging purposes. Don't actually copy these 2 lines! -->
+    <!--[if lt IE 9]>
+    <script src="__JS__/ie8-responsive-file-warning.js"></script><![endif]-->
+    <!--<script src="../static/js/ie-emulation-modes-warning.js"></script>-->
+
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+
+    <style>
+        html {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="top-content">
+        <div class="inner-bg">
+            <div class="container">
+                <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2 text">
+                        <h1><strong>MySite</strong>登录</h1>
+                        <div class="description">
+                            <p></p>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3 form-box">
+                        <div class="form-bottom">
+                            <form class="login-form">
+                                <div class="form-group">
+                                    <div class="form-group">
+                                        <label for="username" class="control-label">用户名</label>
+                                        <input type="text" class="form-control" id="username" name="username" placeholder="用户名/注册邮箱" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="password" class="control-label">密码</label>
+                                        <input type="password" class="form-control" id="password" name="password" placeholder="密码" />
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="verify" class="control-label">验证码</label>
+                                        <div class="input-group">
+                                            <input type="text" class="form-control" id="verify" name="verify" placeholder="验证码" />
+                                            <!-- <span class="input-group-addon"><img id="code" name="code" src="{:captcha_src()}" alt="刷新验证码"
+                                                            onclick="refreshVerify()"></span> -->
+                                            <span class="input-group-addon" style="height: 46px;"><img id="code" name="code" src="{:url('blog/GetCaptcha/verify')}" alt="刷新验证码"
+                                                               height="38px" onclick="refreshVerify()"></span>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="loginbox-forget">
+                                            <a href="{:url('blog/Member/forget')}">忘记密码?</a>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <button class="btn btn-primary btn-block" id="login">登录</button>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="loginbox-signup">
+                                            <a href="{:url('blog/Member/register')}">注册账户</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 col-sm-offset-3 social-login">
+                        <div class="social-login-buttons">
+                            <a class="btn btn-link-2" href="#">
+                                <i class="fa fa-qq"></i> QQ
+                            </a>
+                            <a class="btn btn-link-2" href="#">
+                                <i class="fa fa-wechat"></i> 微信
+                            </a>
+                            <a class="btn btn-link-2" href="#">
+                                <i class="fa fa-weibo"></i> 微博
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="__JS__/jquery.min.js"></script>
+    <script>
+        window.jQuery || document.write('<script src="__JS__/jquery.min.js"><\/script>')
+    </script>
+    <script src="__JS__/bootstrap.min.js"></script>
+    <!--<script src="__JS__/js/docs.min.js"></script>-->
+    <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+    <!--<script src="__JS__/ie10-viewport-bug-workaround.js"></script>-->
+    <script src="__LIB__/layer/layer.js"></script>
+
+    <script>
+        function refreshVerify() {
+            document.getElementById('code').src = "{:url('blog/GetCaptcha/verify')}?" + Math.random();
+        }
+        $(function() {
+            $("#login").click(function() {
+
+                $.ajax({
+                    url: "{:url('blog/Member/login')}",
+                    type: 'post',
+                    data: $("form").serialize(),
+                    dataType: 'json',
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 2000
+                            }, function() {
+                                location.href = data.url;
+                            });
+                        } else {
+                            refreshVerify();
+                            layer.open({
+                                title: '登陆失败',
+                                content: data.msg,
+                                icon: 5,
+                                anim: 5
+                            });
+                        }
+                    }
+                })
+
+                return false;
+            });
+
+        });
+    </script>
+
+</body>
+
+</html>

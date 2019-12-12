@@ -1,0 +1,301 @@
+{extend name="public/base"} {block name="title"} {$teamInfo.teamname}团队 {/block} {block name="container"}
+
+
+<div class="xdd-team-detail-head">
+  <div class="xdd-team-detail-headname">
+        <h1><a href="{:url('blog/Member/person',['id'=>$teamInfo.member_id])}">{$teamInfo.teamname}</a></h1>
+        <ul class="xdd-team-detail-headul">
+            <li>
+                <p>{$teamInfo.follow.follow_num}</p>关注
+            </li>
+            <li>
+                <p>{$teamInfo.follow.followed_num}</p>粉丝
+            </li>
+            <li>
+                <p>{$teamInfo.article_num}</p>文章
+            </li>
+            <li>
+                <p>134665</p>贡献字数
+            </li>
+        </ul>
+    </div>
+    {if $teamInfo.pic!=null}
+    <a href="{:url('blog/Member/person',['id'=>$teamInfo.member_id])}">
+        <img src="{$teamInfo.pic}" alt="" id="userpic" name="userpic" width="150px" height="150px" class="am-circle xdd-team-detail-headimg" /> </a>
+    {else /}
+
+    <img src="__IMG__/moren.jpg" alt="" id="userpic" name="userpic" width="150px" height="150px" /> {/if}
+    <div class="xdd-team-detail-write">
+        {if $teamInfo.member_id!=session('member.id')} {if $follow ==null}
+        <button id="follow" style="background-color:#0084ff;float: right;width: 100px" onselectstart="return false;">
+            关注TA
+        </button> {else /}
+        <button id="follow" style="background-color:#a0a0a0;float: right;width: 100px" onselectstart="return false;">
+            已关注
+        </button> {/if} {else /}
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-lg">
+                <button id="subarticle" type="button" class="am-btn"><span class="am-icon-bars"></span>发布项目</button>
+            </div>
+        </div>
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-lg">
+                <a href="{:url('blog/Article/subarticle')}" target="_blank"><button type="button" class="am-btn"><span
+                            class="am-icon-pencil"></span>发布博客</button></a>
+            </div>
+        </div>
+        <div class="am-btn-toolbar">
+            <div class="am-btn-group am-btn-group-lg">
+                <button id="editInfo" class="am-btn" onselectstart="return false;">
+                    编辑团队资料
+                </button>
+            </div>
+        </div>
+        {/if}
+
+    </div>
+</div>
+
+{block name="main"}
+<div class="xdd-team-detail-content">
+    <div class="am-u-md-2 xdd-sider-div ">
+        <ul class="xdd-sider-ul">
+            <li>
+                <a href="{:url('team/Team/team',['id'=>$teamInfo.team_id])}" class="" id="introduction" dataid="introduction">团队介绍</a>
+            </li>
+            {volist name="cates" id="cate"}
+            <li>
+                <a href="" class="personnav" id="catename" dataid="{$cate.id}">{$cate.catename}</a>
+            </li>
+            {/volist}
+            <li>
+                <a href="#" class="" id="contact">联系方式</a>
+            </li>
+
+        </ul>
+    </div>
+    <div class="am-u-md-10">
+        <div class="xdd-block-background">
+
+            <div>
+                <h2 class="xdd-right-block-title">团队</h2>
+                <div>
+                    在深度学习中，迁移学习经常被使用，在大数据集上预训练的模型迁移到特定的任务，往往需要保持模型参数不变，而微调与任务相关的模型层。本文主要介绍，使用tensorflow部分更新模型参数的方法。 在深度学习中，迁移学习经常被使用，在大数据集上预训练的模型迁移到特定的任务，往往需要保持模型参数不变，而微调与任务相关的模型层。本文主要介绍，使用tensorflow部分更新模型参数的方法。 在深度学习中，迁移学习经常被使用，在大数据集上预训练的模型迁移到特定的任务，往往需要保持模型参数不变，而微调与任务相关的模型层。本文主要介绍，使用tensorflow部分更新模型参数的方法。
+                </div>
+                <h2 class="xdd-right-block-title">所属机构</h2>
+                <div>
+                    哈尔滨医科大学 > 生物信息科学与技术学院 > 软件工程教研室
+                </div>
+                <h2 class="xdd-right-block-title">研究领域</h2>
+                <div>
+                    <ul>
+                        <li>1. 数据库研发</li>
+                        <li>1. 数据库研发</li>
+                        <li>1. 数据库研发</li>
+                        <li>1. 数据库研发</li>
+                    </ul>
+                </div>
+                <h2 class="xdd-right-block-title">研究进展</h2>
+                <div>
+                    在深度学习中，迁移学习经常被使用，在大数据集上预训练的模型迁移到特定的任务，往往需要保持模型参数不变，而微调与任务相关的模型层。本文主要介绍，使用tensorflow部分更新模型参数的方法。 在深度学习中，迁移学习经常被使用，在大数据集上预训练的模型迁移到特定的任务，往往需要保持模型参数不变，而微调与任务相关的模型层。本文主要介绍，使用tensorflow部分更新模型参数的方法。 在深度学习中，迁移学习经常被使用，在大数据集上预训练的模型迁移到特定的任务，往往需要保持模型参数不变，而微调与任务相关的模型层。本文主要介绍，使用tensorflow部分更新模型参数的方法。
+                </div>
+                <h2 class="xdd-right-block-title">成员介绍</h2>
+                <div class="am-g xdd-team-detail-introduction">
+
+                    {volist name="teamInfo.members" id="vo"}
+                    <div class="am-u-lg-2">
+                        <div class="am-thumbnail">
+                            <img src="{$vo.info.pic}" class="am-circle" alt="" />
+                            <h3 class="am-thumbnail-caption">{$vo.info.username}</h3>
+                        </div>
+                    </div>
+
+                    {/volist}
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <input id="member_id" name="member_id" type="hidden" value="{$teamInfo.member_id}" />
+</div>
+{/block} {/block} {block name="js"}
+<script type="text/javascript">
+    $(function() {
+
+
+
+        /*
+         *编辑信息
+         *
+         */
+        $("#editInfo").click(function() {
+            window.location.href = "{:url('team/Team/edit')}";
+            return false;
+        });
+
+
+        /*
+         *加载联系方式
+         *
+         */
+        $("#contact").click(function() {
+            $(".xdd-block-background").html("");
+            var str = "联系人：{$teamInfo.boss}<br>"
+            str = str + "邮箱：{$teamInfo.email}"
+            $(".xdd-block-background").append(str);
+            return false;
+        });
+
+
+
+
+
+        /*
+         *
+         * 发布文章
+         * */
+        $("#subarticle").click(function() {
+            window.location.href = "{:url('blog/Article/subarticle')}"
+        })
+
+
+
+        /*
+         * 加载文章列表*/
+        $(".personnav").click(function() {
+            var cateId = $(this).attr("dataid");
+            var memberId = $("#member_id").val();
+            var pageIndex = 1;
+            $.ajax({
+                url: "{:url('blog/Member/list')}",
+                type: "post",
+                data: {
+                    pageIndex: pageIndex,
+                    cateId: cateId,
+                    memberId: memberId
+                },
+                dataType: "json",
+                success: function(json) {
+
+                    $(".xdd-block-background").html("");
+                    var msg = json["rows"];
+                    var listLength = msg.length;
+                    var memId = $("#member_id").val();
+                    for (var i = 0; i < listLength; i++) {
+                        var jsonForeach = msg[i];
+                        var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+                        var id = jsonObjForeach['id'];
+                        var url = "{:url('blog/Article/info')}?id=" + jsonObjForeach["id"];
+                        var url_user = "{:url('blog/Member/person')}?id=" + jsonObjForeach["members"]["member_id"]
+                        var str = '<article class="am-g"><div class="xdd-blog-img xdd-imgscale">';
+                        str = str + '<a href="' + url + '" target="_blank"><img src="' + jsonObjForeach["pic"] + '" alt="" class=""></a></div>';
+                        str = str + '<div class="xdd-blog-text xdd-blog-text-img">';
+                        str = str + '<h2><a href="' + url + '" target="_blank">' + jsonObjForeach["title"] + '</a></h2>';
+                        str = str + '<p>我们一直在坚持着...</p><p>';
+                        // str =
+                        //     str +
+                        //     '<span class="xdd-blog-user"><a href="'+url_user+'" target="_blank"><img width="30" height="30" alt="author" class="" src="'+jsonObjForeach["members"]["pic"]+'"></a>';
+                        // str =
+                        //     str + '<a href="'+url_user+'" target="_blank">'+jsonObjForeach["members"]["nickname"] + '</a></span></span>';
+                        str = str + "<span class='xdd-blog-articleinfo'>{if $teamInfo.member_id==session('member.id')}<button style='border: 0;background-color: transparent;outline: none;' dataid='" + jsonObjForeach["id"] + "' onclick='editArticle(this)'>修改</button>"
+                        str = str + "<button style='border: 0;background-color: transparent;outline: none;' dataid='" + jsonObjForeach['id'] + "' onclick='del(this)' id='delArticleBtn'>删除</button>&nbsp;" + jsonObjForeach['update_time'] + "&nbsp;&nbsp;                            &nbsp;浏览" + jsonObjForeach['hits'] + "次&nbsp;&nbsp;&nbsp;喜欢|" + jsonObjForeach['zan_num'] + "&nbsp;&nbsp;&nbsp;收藏|" + jsonObjForeach['collect_num'] + "&nbsp;&nbsp;&nbsp;分享&nbsp;&nbsp;{else /}"
+                        str = str + '<i class="" aria-hidden="true"></i>&nbsp;' + jsonObjForeach["update_time"] + "&nbsp;&nbsp;";
+                        str = str + '<i class="" aria-hidden="true"></i>&nbsp;' + jsonObjForeach["hits"] + "&nbsp;&nbsp;";
+                        str = str + '<i class="am-icon-heart-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;喜欢&nbsp;&nbsp;';
+                        str = str + '<i class="am-icon-star-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;收藏&nbsp;&nbsp;';
+                        str = str + '<i class="am-icon-share" style="color: red;"></i>&nbsp;分享&nbsp;&nbsp;';
+                        str = str + "{/if}</span></p></div></article><hr> ";
+                        $(".xdd-block-background").append(str);
+                    }
+                }
+            });
+            return false;
+        });
+
+        /* * 关注 * */
+        $("#follow").click(function() {
+            if ("{:session('?member.id')}") {
+                var follow = $("#follow");
+                var member_id = $("#member_id").val();
+                $.ajax({
+                    url: "{:url('team/team/follow')}",
+                    type: "post",
+                    data: {
+                        member_id: member_id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+                            follow.css("background-color", "#a0a0a0");
+                            follow.text("已关注");
+                        } else {
+                            follow.css("background-color", "#4682b4");
+                            follow.text("关注TA");
+                        }
+                    }
+                });
+            } else {
+                layer.msg("请先登录", {
+                    icon: 5,
+                    time: 2000
+                }, function() {
+                    location.href = "{:url('blog/Member/login')}";
+                });
+            }
+            return false;
+        });
+    })
+
+
+
+
+    /*
+     * 编辑文章
+     * */
+    function editArticle(data) {
+        var id = $(data).attr('dataid');
+        window.location.href = "{:url('blog/Article/edit')}?id=" + id;
+    }
+
+
+    /*
+     * 删除文章
+     * */
+    function del(data) {
+        var id = $(data).attr('dataid');
+        layer.confirm('确定删除吗？', {
+            title: '删除文章',
+            icon: 3
+        }, function() {
+            $.ajax({
+                url: "{:url('blog/Article/del')}?id=" + id,
+                type: 'post',
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.code == 1) {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 2000
+                        }, function() {
+                            location.href = data.url;
+                        });
+                    } else {
+                        layer.open({
+                            title: '删除文章失败！',
+                            content: data.msg,
+                            icon: 5,
+                            anim: 5
+                        });
+                    }
+                }
+            });
+        });
+
+    }
+</script>
+
+{/block}

@@ -1,0 +1,177 @@
+{extend name="public/person_base"} {block name="title"}{$memberInfo.nickname}的文章{/block}{block name="header"}
+
+<style>
+    .person-cate a {
+        color: black;
+    }
+    
+    .person-cate li a:hover {
+        text-decoration: none;
+        background-color: white;
+    }
+</style>
+{/block} {block name="container"}
+
+<ul class="nav nav-tabs person-cate" style="margin-bottom: 20px">
+
+    <li class="active">
+        <a href="{:url('blog/Member/articleList',['id'=>$memberInfo.member_id])}">全部</a>
+    </li>
+    {volist name="articleCates" id="cate"}
+    <li>
+        <a href="" class="personnav" id="catename" dataid="{$cate.id}">{$cate.catename}</a>
+    </li>
+    {/volist}
+</ul>
+
+<div class="xdd-person-list">
+    {volist name="articleList" id="vo"}
+    <div class="row">
+        {if $vo.pic!=null}
+
+        <div class="col-lg-3">
+            <div class="xdd-blog-img xdd-imgscale">
+                <a href="{:url('blog/Article/info',['id'=>$vo.id])}" target="_blank"><img src="{$vo.pic}" alt="" class=""></a>
+            </div>
+        </div>
+        <div class="col-lg-9">
+            {else /}
+            <div class="col-lg-12">
+                {/if} {if $vo.status==1}
+                <div class="xdd-project-item-header"><span class="label label-success">已发布</span></div>
+                {else /}
+                <div class="xdd-project-item-header"><span class="label label-warning">未发布</span></div> {/if}
+                <div class="xdd-blog-text xdd-blog-text-img">
+                    <h2><a href="{:url('blog/Article/info',['id'=>$vo.id])}" target="_blank">{$vo.title}</a></h2>
+                    <p>{$vo.desc}...</p>
+                    <p>
+                        <span class="xdd-blog-user"> 
+                            <a href="{:url('blog/Member/person',['id'=>$vo.members.member_id])}" target="_blank"><img  width="30" height="30" src="{$vo.members.pic}" /></a>
+
+                            <h5><a title="{$vo.members.nickname}的主页" href="{:url('blog/Member/person',['id'=>$vo.members.member_id])}"
+                                target="_blank">{$vo.members.nickname}</a></h5>
+                    </span>
+                        <span class="xdd-blog-articleinfo">
+                                {if $memberInfo.member_id==session('member.id')}
+                                <button style="border: 0;background-color: transparent;outline: none;" dataid="{$vo.id}" onclick='editArticle(this)'>编辑</button>&nbsp;
+                                <button style='border: 0;background-color: transparent;outline: none;' dataid="{$vo.id}" onclick='del(this)' id='delArticleBtn'>删除</button>&nbsp;{/if}
+                          <i class="" aria-hidden="true"></i>&nbsp;{$vo.update_time}&nbsp;&nbsp;
+                          <i class="" aria-hidden="true"></i>&nbsp;浏览{$vo.hits}次&nbsp;&nbsp;
+                          <i class="fa fa-heart-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;喜欢{$vo.zan_num}&nbsp;&nbsp;
+                          <i class="fa fa-star-o" onclick="blogiconClick(this)" style="color: red;"></i>&nbsp;收藏{$vo.collect_num}&nbsp;&nbsp;
+                        
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <hr> {/volist}
+    </div>
+
+</div> {/block} {block name="js"}
+
+<script type="text/javascript">
+    $(function() {
+        $(".personnav").click(function() {
+            var cateId = $(this).attr("dataid");
+            $(".person-cate li").each(function() {
+                $(this).removeClass("active");
+            });
+            $(this).parent().addClass("active")
+            var pageIndex = 1;
+            $.ajax({
+                url: "{:url('blog/Member/articleList',['id'=>$memberInfo.member_id])}",
+                type: "post",
+                data: {
+                    pageIndex: pageIndex,
+                    cateId: cateId,
+                    memberId: "{$memberInfo.member_id}"
+                },
+                dataType: "json",
+                success: function(json) {
+                    $(".xdd-person-card").removeClass("show").addClass("hidden")
+                    $(".xdd-person-list").removeClass("hidden").addClass("show")
+                    $(".xdd-person-list").html("");
+                    var msg = json["rows"];
+                    // console.log(msg[0]['cate'])
+                    var listLength = msg.length;
+                    var memId = $("#member_id").val();
+                    for (var i = 0; i < listLength; i++) {
+                        var jsonForeach = msg[i];
+                        var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+                        var id = jsonObjForeach['id'];
+                        var url = "{:url('blog/Article/info')}?id=" + jsonObjForeach["id"];
+                        var url_user = "{:url('blog/Member/person')}?id=" + jsonObjForeach["members"]["member_id"]
+                        if (jsonObjForeach["pic"] != null && jsonObjForeach["pic"] != "") {
+                            var str = '<div class="row"><div class="col-lg-3"><div class="xdd-blog-img xdd-imgscale"><a href="' + url + '" target="_blank"><img src="' + jsonObjForeach["pic"] + '" alt="" class=""></a></div></div><div class="col-lg-9">';
+                        } else {
+                            var str = '<div class="row"><div class="col-lg-12">';
+                        }
+                        if (jsonObjForeach["status"] == 1) {
+                            str = str + '<div class="xdd-project-item-header"><span class="label label-success">已发布</span></div>';
+                        } else {
+                            str = str + '<div class="xdd-project-item-header"><span class="label label-warning">未发布</span></div>';
+                        }
+                        str = str + '<div class="xdd-blog-text xdd-blog-text-img">';
+                        str = str + '<h2><a href="' + url + '" target="_blank">' + jsonObjForeach["title"] + '</a></h2>';
+                        str = str + '<p>' + jsonObjForeach["desc"] + '...</p>';
+                        str = str + "<p><span class='xdd-blog-articleinfo'>{if $memberInfo.member_id==session('member.id')}<button style='border: 0;background-color: transparent;outline: none;' dataid='" + jsonObjForeach["id"] + "' onclick='editArticle(this)'>编辑</button>&nbsp;"
+                        str = str + "<button style='border: 0;background-color: transparent;outline: none;' dataid='" + jsonObjForeach['id'] + "' onclick='del(this)' id='delArticleBtn'>删除</button>&nbsp;{/if}"
+                        str = str + '<i class="" aria-hidden="true"></i>&nbsp;' + jsonObjForeach["update_time"] + "&nbsp;&nbsp;";
+                        str = str + '<i class="" aria-hidden="true"></i>&nbsp;浏览' + jsonObjForeach["hits"] + "&nbsp;&nbsp;";
+                        str = str + '<i class="fa fa-heart-o"  style="color: red;"></i>&nbsp;喜欢' + jsonObjForeach["zan_num"] + '&nbsp;&nbsp;';
+                        str = str + '<i class="fa fa-star-o"  style="color: red;"></i>&nbsp;收藏' + jsonObjForeach["collect_num"] + '&nbsp;&nbsp;';
+                        str = str + "</span></p></div></div></div><hr>";
+                        $(".xdd-person-list").append(str);
+                    }
+                }
+            });
+            return false;
+        });
+
+    })
+
+
+    function editArticle(data) {
+        var dataid = $(data).attr('dataid');
+        url = "{:url('blog/Article/edit',['id'=>dataid])}";
+        url = url.replace('dataid', dataid)
+        window.open(url);
+    }
+
+    function del(data) {
+        var id = $(data).attr('dataid');
+        layer.confirm('确定删除吗？', {
+            title: '删除文章',
+            icon: 3
+        }, function() {
+            $.ajax({
+                url: "{:url('blog/Article/del')}",
+                type: 'post',
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.code == 1) {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 2000
+                        }, function() {
+                            location.href = data.url;
+                        });
+                    } else {
+                        layer.open({
+                            title: '删除文章失败！',
+                            content: data.msg,
+                            icon: 5,
+                            anim: 5
+                        });
+                    }
+                }
+            });
+        });
+
+    }
+</script>
+{/block}

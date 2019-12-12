@@ -1,0 +1,172 @@
+{extend name="Common@base/base"} {block name="curent"}
+<li><a href="{:url('plot/Index/index')}">绘图</a></li>
+<li class="active"><a href="{:url('blog/Index/index')}">博客</a></li>{/block} {block name="container"}
+<div class="container xdd-team-container">
+    <div class="row">
+
+        <!-- 左 -->
+        {block name="left-sider"}
+        <div class="col-lg-1 xdd-sider-div">
+            <ul class="xdd-sider-ul">
+                {if $catename=="Blog"}
+                <li class="active">
+                    <a href="{:url('blog/Index/index')}">全部</a>
+                </li>
+                {volist name="articleCates" id="cate"}
+                <li>
+                    <a href="{:url('blog/Index/cate',['catename'=>$cate.catename])}">{$cate.catename}</a>
+                </li>
+                {/volist} {else/}
+                <li>
+                    <a href="{:url('blog/Index/index')}">全部</a>
+                </li>
+                {volist name="articleCates" id="cate"}
+                <!-- 判断是否选中 -->
+                {if $cate.catename==$catename}
+                <li class="active">
+                    <a href="{:url('blog/Index/cate',['catename'=>$cate.catename])}">{$cate.catename}</a>
+                </li>
+                {else /}
+                <li>
+                    <a href="{:url('blog/Index/cate',['catename'=>$cate.catename])}">{$cate.catename}</a>
+                </li>
+                {/if} {/volist} {/if}
+            </ul>
+        </div>
+        {/block}
+
+        <!-- 左end -->
+
+
+        <!-- 主体 -->
+        {block name="container"} {/block}
+
+        <!-- 主体end -->
+
+        <!-- 右 -->
+        {block name="right-sider"}
+        <div class="col-lg-3" style="margin-top:10px">
+            <div class="xdd-right-sider">
+                <div class="xdd-right-sider xdd-project-sider-header">
+
+                    <a href="{:url('blog/Article/subarticle')}" class="btn project-btn" type="button" target="_blank"><span class="fa fa-edit"></span> 写博客</a>
+                </div>
+                <div class="xdd-right-dianjipaihang">
+                    <h2 class="xdd-right-block-title">点击排行</h2>
+                    <section class="xdd-right-blok-img xdd-imgscale">
+                        <a href="#"><img src="__IMG__/k.jpg">
+                            <span>6条网页设计配色原则,让你秒变配色高手</span></a>
+                    </section>
+                    <ul>
+                        {volist name="topTen" id="vo" key="k"} {lt name="k" value="4"}
+                        <li>
+                            <i class="label label-danger">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title" target="_blank">{$vo.title}</a>
+                        </li>
+
+                        {else/}
+                        <li>
+                            <i class="label label-primary">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title" target="_blank">{$vo.title}</a>
+                        </li>{/lt} {/volist}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="xdd-right-sider">
+                <div class="xdd-right-dianjipaihang">
+                    <h2 class="xdd-right-block-title">推荐文章</h2>
+                    <section class="xdd-right-blok-img xdd-imgscale">
+                        <a href="#"><img src="__IMG__/k.jpg">
+                            <span></span></a>
+                    </section>
+                    <ul>
+                        <!-- 推荐文章列表 -->
+                        {volist name="topArticles" id="vo" key="k"} {lt name="k" value="4"}
+                        <li>
+                            <i class="label label-danger">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title" target="_blank">{$vo.title}</a>
+                        </li>
+
+                        {else/}
+                        <li>
+                            <i class="label label-primary">{$k}</i> <a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title" target="_blank">{$vo.title}</a>
+                        </li>
+                        {/lt} {/volist}
+                    </ul>
+                </div>
+            </div>
+            <!-- <div class="xdd-right-sider">
+                <div class="xdd-right-dianjipaihang">
+                    <h2 class="xdd-right-block-title">猜你喜欢</h2>
+                    <section class="xdd-right-blok-img xdd-imgscale">
+                        <a href="#"><img src="__IMG__/k.jpg">
+                            <span>6条网页设计配色原则,让你秒变配色高手</span></a>
+                    </section>
+                    <ul>
+                        <li><i class="label label-danger">1</i><a href="#">十条设计原则教你学会如何设计网页布局!</a></li>
+
+                    </ul>
+                </div>
+            </div>
+
+            <div class="xdd-right-sider">
+                <div class="xdd-right-dianjipaihang">
+                    <h2 class="xdd-right-block-title">站内公告</h2>
+                    <section class="xdd-right-blok-img xdd-imgscale">
+                        <a href="#"><img src="__IMG__/k.jpg">
+                            <span>6条网页设计配色原则,让你秒变配色高手</span></a>
+                    </section>
+                    <ul>
+                        <li><i class="label label-danger">1</i><a href="#">十条设计原则教你学会如何设计网页布局!</a></li>
+
+                    </ul>
+                </div>
+            </div> -->
+        </div>
+        {/block}
+
+        <!-- 右end -->
+    </div>
+</div>
+
+{/block}
+<footer class="footer xdd-footer">
+    <div class="container">
+        <div class="xdd-footer-wx">
+            <img src="__IMG__/weixin.jpg">
+            <span>我的微信</span>
+        </div>
+        <div class="row">
+            <div class="col-xs-6 col-md-6 xdd-footer-info">
+                <p><b>MySite</b></p>
+                <p>哈尔滨医科大学生物信息科学与技术学院<b>软件工程教研室</b></p>
+                <p><span class="fa fa-envelope"> </span> Email: xindd_2014@163.com</p>
+                <p>Copyright © ......... 备案号：123456789</p>
+            </div>
+            <div class="col-xs-3 col-md-3 xdd-footer-info">
+                <p><b>联系方式</b></p>
+                <p><span class="fa fa-phone"> </span> 电话：18846124409</p>
+                <p><span class="fa fa-qq"> </span> QQ: 1184935343</p>
+                <p><b>友情链接</b></p>
+                <p><a href="#">xxx网</a> <a href="#">xxx网</a> <a href="#">xxx网</a></p>
+            </div>
+        </div>
+
+    </div>
+</footer>
+
+<!-- Bootstrap core JavaScript
+    ================================================== -->
+<!-- Placed at the end of the document so the pages load faster -->
+<script src="__JS__/jquery.min.js"></script>
+<script>
+    window.jQuery || document.write('<script src="__JS__/jquery.min.js"><\/script>')
+</script>
+<script src="__JS__/bootstrap.min.js"></script>
+<!--<script src="__JS__/js/docs.min.js"></script>-->
+<!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+<!--<script src="__JS__/ie10-viewport-bug-workaround.js"></script>-->
+<script src="__LIB__/layer/layer.js"></script>
+
+{block name="js"} {/block}
+</body>
+
+</html>

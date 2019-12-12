@@ -1,0 +1,109 @@
+{extend name="public/base" /}
+{block name="title"}
+{$articleInfo.title}
+{/block}
+
+<!-- 文章详细内容 -->
+{block name="article-info"}
+
+<h3 class="article-title">{$articleInfo.title}</h3>
+<div class="status">
+    {$articleInfo.hits}阅读&nbsp;&nbsp;{$articleInfo.is_top}评论&nbsp;&nbsp;作者：{$articleInfo.author}
+    <!-- 所属类别 -->
+    {volist name="articleInfo.tags|strToArray" id="vo"}&nbsp;&nbsp;<span
+        class="label label-default">{$vo}</span>&nbsp;&nbsp;{/volist}
+</div>
+<div class="article-content">
+    <blockquote>
+        {$articleInfo.desc}
+    </blockquote>
+    <div>{:htmlspecialchars_decode($articleInfo.content)}</div>
+
+</div>
+<div class="article-comment" style="margin-top:20px">
+    <div class="page-header"><b>相关评论</b></div>
+    <div class="comment-content">
+        <form>
+            <input type="hidden" name="article_id" value="{$articleInfo.id}" />
+            <input type="hidden" name="member_id" value="{:session('member.id')}" />
+            <div class="form-group">
+                <textarea class="form-control" id="comment" name="comment" rows="5" cols=""></textarea>
+            </div>
+            <div class="form-group pull-right">
+                <button type="button" class="btn btn-primary" id="subComment">
+                    评论（请认真评论）
+                </button>
+            </div>
+        </form>
+    </div>
+    <div class="clearfix"></div>
+    {volist name="articleInfo.comments" id="vo"}
+    <div class="comment-list">
+        <div class="comment-list-item">
+            <div class="info">
+                {$vo.member.nickname}<small>{$vo.create_time}</small>
+            </div>
+            <div class="content">{$vo.content}</div>
+        </div>
+    </div>
+    {/volist}
+</div>
+
+{/block}
+
+{block name="topArticles"}
+<div class="page-header h3">推荐文章</div>
+{volist name="topArticles" id="vo"}
+
+<div class="topic-list">
+    <div class="topic-list-item">
+        <a href="{:url('index/Article/info',['id'=>$vo.id])}" class="title">{$vo.title}</a>
+    </div>
+</div>
+{/volist} {/block}
+
+{block name="js"}
+
+<script>
+    $(function () {
+        $("#subComment").click(function () {
+            if ("{:session('?member.id')}") {
+                $.ajax({
+                    url: "{:url('index/Article/comm')}",
+                    type: 'post',
+                    data: $("form").serialize(),
+                    dataType: 'json',
+                    success: function (data) {
+                        if (data.code == 1) {
+                            layer.msg(data.msg, {
+                                icon: 6,
+                                time: 2000
+                            }, function () {
+                                location.href =document.URL;
+                            });
+                        } else {
+                            layer.open({
+                                title: '评论失败',
+                                content: data.msg,
+                                icon: 5,
+                                anim: 5
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录",
+                    {
+                        icon: 5,
+                        time: 2000
+                    }, function () {
+                        location.href = "{:url('index/Member/login')}";
+                    }
+                );
+            }
+        });
+    });
+</script>
+{/block}
+

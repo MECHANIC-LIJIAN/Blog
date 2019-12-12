@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head lang="zh-cn">
+    <meta charset="UTF-8" />
+    <title>{block name="title"}{/block}</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="renderer" content="webkit" />
+    <meta http-equiv="Cache-Control" content="no-siteapp" />
+    <link rel="shortcut icon" type="IMG/x-icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="__CSS__/amazeui.min.css" />
+    <link rel="stylesheet" href="__CSS__/app.css" />
+    {block name="header"}{/block}
+    <style>
+        html {
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="am-topbar am-topbar-fixed-top">
+        <div class="am-container">
+            <h1 class="am-topbar-brand">
+                <a href="#">MySite</a>
+            </h1>
+
+            <button class="am-topbar-btn am-topbar-toggle am-btn am-btn-sm am-btn-success am-show-sm-only"
+                data-am-collapse="{target: '#doc-topbar-collapse'}">
+                <span class="am-sr-only">导航切换</span>
+                <span class="am-icon-bars"></span>
+            </button>
+
+            <div class="am-collapse am-topbar-collapse" id="doc-topbar-collapse">
+                <ul class="am-nav am-nav-pills am-topbar-nav">
+                    <li class="am-active"><a href="index.html">首页</a></li>
+                    <li><a href="paint.html">绘图</a></li>
+                    <li><a href="{:url('blog/Index/index')}">博客</a></li>
+                    <li><a href="{:url('team/Index/index')}">Team</a></li>
+                    <li><a href="#">问答</a></li>
+                    <li><a href="#">项目</a></li>
+                    <li><a href="#">工具</a></li>
+                    <li class="am-dropdown" data-am-dropdown>
+                        <a class="am-dropdown-toggle" data-am-dropdown-toggle href="javascript:;">
+                            下载 <span class="am-icon-caret-down"></span>
+                        </a>
+                        <ul class="am-dropdown-content">
+                            <li class="am-dropdown-header">下载</li>
+                            <li><a href="#">tools</a></li>
+                            <li><a href="#">文档</a></li>
+                            <li><a href="#">视频</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                <form action="{:url('blog/index/search')}" class="am-topbar-form am-topbar-left am-form-inline"
+                    role="search">
+                    <div class="am-form-group am-input-group xdd-search">
+                        <input type="text" class="am-form-field am-input-sm am-round " placeholder="搜索" />
+                        <span class="am-input-group-btn">
+                            <button class="am-btn am-round" type="submit">
+                                <span class="am-icon-search"></span>
+                            </button>
+                        </span>
+                    </div>
+                </form>
+                <div class="am-topbar-right">
+                    {if session('member.username') !=null}
+                    <ul class="am-nav am-nav-pills am-topbar-nav">
+                        <li>
+                            <a href="{:url('blog/Member/person',['id'=>session('member.id')])}"
+                                target="_blank">{:session('member.username')}</a>
+                        </li>
+                        <li><a href="{:url('blog/Member/logout')}">退出登陆</a></li>
+                    </ul>
+                    {else /}
+                    <ul class="am-nav am-nav-pills am-topbar-nav">
+                        <li><a href="{:url('blog/Member/login')}">登录</a></li>
+                        <li><a href="{:url('blog/Member/register')}">注册</a></li>
+                    </ul>
+                    {/if}
+
+
+                </div>
+            </div>
+        </div>
+    </header>
+
+
+    <div class="am-g am-g-fixed xdd-container">
+    {block name="container"}
+
+        {block name="left-bar"}
+        <!-- <div class="am-u-md-1 xdd-sider-div ">
+            <ul class="xdd-sider-ul">
+                {volist name="cates" id="cate"}
+                <li>
+                    <a href="{:url('blog/Index/index',['id'=>$cate.id])}">{$cate.catename}</a>
+                </li>
+                {/volist}
+            </ul>
+        </div> -->
+        {/block}
+
+        {block name="main"}
+        <div class="am-u-md-8">
+                
+            <div class="xdd-block-background">
+                
+              
+            </div>
+        </div>
+        {/block}
+        
+        <!-- End container -->
+        {block name="right-bar"}
+        <!-- <div class="am-u-md-3">
+            <div class="xdd-right-sider">
+                <div class="xdd-right-dianjipaihang">
+                    <h2 class="xdd-right-block-title">点击排行</h2>
+                    <section class="xdd-right-blok-img xdd-imgscale"><a href="#"><img src="../static/site-icons/k.jpg">
+                            <span>6条网页设计配色原则,让你秒变配色高手</span></a>
+                    </section>
+                    <ul>
+                        {volist name="topArticles" id="vo"}
+                        <li><a href="{:url('blog/Article/info',['id'=>$vo.id])}" class="title">{$vo.title}</a></li>
+                        {/volist}
+
+                    </ul>
+                </div>
+
+            </div>
+        </div> -->
+        {/block}
+
+    {/block}
+    </div>
+    <script src="__JS__/jquery-3.3.1.min.js"></script>
+    <!--[if lt IE 9]>
+      <script src="http://libs.baidu.com/jquery/1.11.1/jquery.min.js"></script>
+      <script src="http://cdn.staticfile.org/modernizr/2.8.3/modernizr.js"></script>
+      <script src="assets/js/amazeui.ie8polyfill.min.js"></script>
+    <![endif]-->
+    <script src="__JS__/amazeui.min.js"></script>
+    <script src="__LIB__/layer/layer.js"></script>
+    <script type="application/javascript">
+        $(".am-list li").hover(
+            function () {
+                var _this = $(this);
+                _this.children()[1].style.display = "block";
+            },
+            function () {
+                var _this = $(this);
+                _this.children()[1].style.display = "none";
+            }
+        );
+
+        // topback.onclick = function () {
+        //     document.body.scrollTop = document.documentElement.scrollTop = 0;
+        // };
+
+        $(function () {
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        });
+    </script>
+    {block name="js"} {/block}
+</body>
+
+</html>

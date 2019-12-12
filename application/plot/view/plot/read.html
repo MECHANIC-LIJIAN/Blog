@@ -1,0 +1,298 @@
+{extend name="public/plotBase"}{block name="left-sider"}{/block}{block name="right-sider"}{/block}{block name="footer"}{/block} {block name="header"}
+<link href="__JS__/codemirror/lib/codemirror.css" rel="stylesheet">
+<!--引入css文件，用以支持主题-->
+<link rel="stylesheet" href="__JS__/codemirror/theme/dracula.css" rel="external nofollow" />
+<link rel="stylesheet" href="__JS__/codemirror/addon/fold/foldgutter.css" rel="external nofollow" />{/block} {block name="title"}{$picInfo.title}{/block}
+<!-- 中间 -->
+{block name="main"}
+<div class="paint-detail-container">
+    <table id="paint-table" class="JColResizer">
+        <tbody>
+            <tr>
+                <td class="plot-info-div" style="width:50px;">
+                    <div class="paint-table-div">
+                        <!-- <h1>{$picInfo.title}</!-->
+                        <div style="height: 40px;"></div>
+                        <div class="xdd-blog-detail-userinfo">
+                            <p>
+                                <span class="xdd-blog-user">
+                                        <a title="{$picInfo.members.nickname}的主页" href="{:url('blog/Member/person',['id'=>$picInfo.members.member_id])}"
+                                            target="_blank"> <img width="40px" height="40px" alt="{$picInfo.members.nickname}" class="" src="{$picInfo.members.pic}"/></a>
+                                        <span><a title="{$picInfo.members.nickname}的主页" href="{:url('blog/Member/person',['id'=>$picInfo.members.member_id])}"
+                                                target="_blank">{$picInfo.members.nickname}</a></span>
+                                </span>
+                                <span class="xdd-blog-articleinfo">
+                                        <!-- <i class="" aria-hidden="true"></i>浏览<br>{$picInfo.hits}<br>次 -->
+                                    </span>
+                            </p>
+                        </div>
+                        <ul class="plot-plot-left-float-ul">
+
+                            {if $zanif.member_id!=null}
+                            <li id="support-fl" title="取消点赞"><span class="fa fa-thumbs-up select-like"></span></li>
+                            {else /}
+                            <li id="support-fl" title="点赞"><span class="fa fa-thumbs-up"></span></li>
+                            {/if}
+
+                            <!-- <li id="share-fl" title="分享">
+                            <span class="fa fa-share-square-o"></span>
+                            <ul class="displaynone">
+                                <li><span class="fa fa-qq"></span></li>
+                                <li><span class="fa fa-wechat"></span></li>
+                                <li><span class="fa fa-weibo"></span></li>
+                            </ul>
+                        </li> -->
+
+                            {if $collectif.member_id!=null}
+                            <li id="star-fl" title="取消收藏"><span class="fa fa-star select-like"></span></li>
+                            {else /}
+                            <li id="star-fl" title="收藏"><span class="fa fa-star"></span></li>
+                            {/if}
+                        </ul>
+                    </div>
+                </td>
+                <td class="left-div">
+                    <div class="paint-table-div">
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="active"><a href="#code" aria-controls="code" role="tab" data-toggle="tab">Code</a></li>
+                            <!--<li role="presentation"><a href="#profile" aria-controls="profile" role="tab" data-toggle="tab">file1</a></li>-->
+                            <!-- <li><a href="#adding" aria-controls="adding" role="tab" data-toggle="tab"><span class="fa fa-plus"></span></a></li> -->
+                            <li class="dropdown pull-right">
+                                <a class="btn btn-info dropdown-toggle run" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" type="button">Run <span class="fa fa-play"></span></a>
+                                <a class="btn btn-info dropdown-toggle disabled runing hidden" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false" type="button">Runing <span class="fa fa-stop"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="btn dropdown-toggle run-python" type="button">Run as Python</a></li>
+                                    <li><a class="btn dropdown-toggle" type="button">Run as R</a></li>
+                                </ul>
+                            </li>
+
+                        </ul>
+
+                        <!-- Tab panes -->
+                        <div class="tab-content">
+                            <div role="tabpanel" class="tab-pane active" id="code">
+                                <!-- begin code -->
+                                <textarea class="" id="code-text" name="code-text">{$picInfo.code}</textarea>
+                                <!-- end code-->
+                            </div>
+                        </div>
+
+                    </div>
+                </td>
+                <td class="right-div">
+                    <div class="paint-table-div">
+                        {if $picInfo.member_id==$Think.session.member.id}
+                        <!-- Nav tabs -->
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li class="pull-right"><a class="btn btn-info" id="save">保存&nbsp;<span class="fa fa-save"></span></a></li>
+                        </ul>
+                        {/if}
+                        <div class="paint-run-result" id="result">
+                            运行结果
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{/block} {block name="js"}
+<script src="__JS__/jquery.ui.js"></script>
+<script src="__JS__/colResizable-1.6.js"></script>
+
+<script src="__JS__/codemirror/lib/codemirror.js"></script>
+<script src="__JS__/codemirror/mode/python/python.js"></script>
+<script src="__JS__/codemirror/mode/r/r.js"></script>
+
+<script src="__JS__/codemirror/addon/fold/foldcode.js"></script>
+<script src="__JS__/codemirror/addon/fold/foldgutter.js"></script>
+<script src="__JS__/codemirror/addon/fold/brace-fold.js"></script>
+<script src="__JS__/codemirror/addon/fold/comment-fold.js"></script>
+<script src="https://cdn.bootcss.com/html2canvas/0.5.0-beta4/html2canvas.js"></script>
+<script type="text/javascript">
+    //根据DOM元素的id构造出一个编辑器
+    var editor = CodeMirror.fromTextArea(document.getElementById("code-text"), {
+        mode: {
+            name: "python",
+            version: 3,
+            singleLineStringErrors: true
+        },
+        //				mode: {name: "r",version: 3, singleLineStringErrors: true},
+        indentUnit: 4,
+        lineNumbers: true, //显示行号
+        theme: "dracula", //设置主题
+        lineWrapping: true, //代码折叠
+        foldGutter: true,
+        gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+        lineWrapping: false,
+        matchBrackets: true, //括号匹配
+    });
+    var height = parseInt($(window).height());
+    //			console.log(height-42-10-40+'px');
+    editor.setSize('100%', height - 42 - 20 - 50 + 'px');
+    $(window).resize(function() {
+        var height = parseInt($(window).height());
+        editor.setSize('100%', height - 42 - 30 - 50 + 'px');
+    })
+
+
+    $(function() {
+        $("#paint-table").colResizable({
+            liveDrag: true, //实时显示滑动位置
+            gripInnerHtml: "<div class='grip'></div>",
+            postbackSafe: true, //刷新后保留之前的拖拽宽度
+        });
+        $('.JCLRgrip .JColResizer').append('<span class="fa fa-bars fa-rotate-90"></span>');
+
+
+        $(".run-python").click(function() {
+            var code_text = editor.getValue();
+            if (code_text.length == 0) {
+                layer.msg("请输入代码", {
+                    icon: 6,
+                    time: 1000
+                });
+            } else {
+                $(".print-run-result").html("")
+                $.ajax({
+                    beforeSend: function() {  //在加载数据之前，要添加 正在加载的dom
+                        var _LoadingHtml = '<div style="width:300px;height:60px;line-height: 57px; padding-left: 50px; padding-right: 5px; background: #fff url(__IMG__/loading.gif) no-repeat scroll 5px 10px; font-family:\'Microsoft YaHei\';">代码运行中，请等待...</div>';
+                        $(".paint-run-result").html(_LoadingHtml)
+                        $(".run").addClass("hidden")
+                        $(".runing").removeClass("hidden")
+                    },
+                    url: "{:url('plot/Plot/runCode')}",
+                    type: "post",
+                    dataType: 'json',
+                    data: {
+                        code_text: code_text
+                    },
+                    success: function(data) {
+                        $(".paint-run-result").html(data.replace(/\"/g, ""))
+                        $(".runing").addClass("hidden")
+                        $(".run").removeClass("hidden")
+                    },
+                });
+            }
+        });
+
+
+        /* 
+         * 点赞
+         *
+         */
+        $("#support-fl").click(function() {
+            if ("{:session('?member.id')}") {
+                $.ajax({
+                    url: "{:url('plot/Plot/zan')}",
+                    type: "post",
+                    data: {
+                        pic_id: "{$picInfo.id}",
+                        member_id: "{$Think.session.member.id}"
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+
+                            $("#support-fl").children().addClass('select-like')
+                            $("#support-fl").attr("title", "取消点赞")
+                        } else {
+
+                            $("#support-fl").children().removeClass("select-like")
+                            $("#support-fl").attr("title", "点赞")
+
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function() {
+                        sessionStorage.setItem('redirect_url', window.location.href)
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+        });
+
+
+        /* 
+         * 收藏
+         *
+         */
+        $("#star-fl").click(function() {
+            if ("{:session('?member.id')}") {
+                var member_id = "{{Think.session('member.id')}}";
+                $.ajax({
+                    url: "{:url('plot/Plot/collect')}",
+                    type: "post",
+                    data: {
+                        pic_id: "{$picInfo.id}",
+                        member_id: "{$Think.session.member.id}"
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+                            $("#star-fl").children().addClass('select-like');
+                            $("#star-fl").attr("title", "取消收藏")
+                        } else {
+                            $("#star-fl").children().removeClass('select-like')
+                            $("#star-fl").attr("title", "收藏")
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function() {
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+        });
+    })
+</script>
+
+{if $picInfo.member_id==$Think.session.member.id}
+<script>
+    $("#save").click(function() {
+        var code = editor.getValue();
+        $.ajax({
+            url: "{:url('plot/Plot/edit')}",
+            type: "post",
+            dataType: 'json',
+            data: {
+                'code': code,
+                'id': "{$picInfo.id}",
+                'member_id': "{$picInfo.member_id}"
+            },
+            success: function(data) {
+                if (data.code == 1) {
+                    layer.msg(data.msg, {
+                        icon: 6,
+                        time: 2000
+                    }, function() {
+                        parent.location.href = data.url;
+                    });
+                } else {
+                    layer.open({
+                        title: "代码更新失败",
+                        content: data.msg,
+                        icon: 5,
+                        anim: 5
+                    })
+                }
+            }
+        })
+    })
+</script>
+{/if} {/block}

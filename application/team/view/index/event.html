@@ -1,0 +1,73 @@
+{extend name="public/base" /}
+<!-- 网页标题 -->
+{block name="title"} 团队--{$teamInfo.teamname} {/block}
+<!-- 团队信息 -->
+{block name="container"}
+<div class="content">
+    <div class="content_left">
+        <h1 class="team_title">{$teamInfo.teamname}</h1>
+        <div class="team_info_wrap">
+            <div class="team_logo">
+                <table style="margin:0 auto;">
+                    <tbody>
+                        <tr>
+                            <td height="370px" width="300px" valign="middle" align="center">
+                                <img style="width:300px;height:300px" src="{$teamInfo.pic}">
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="team_right" style=" width:460px; float:left;">
+                <div class="team_info_box">
+                    <ul>
+                        <li>所在城市：<span class="color_orange">{$teamInfo.area}</span></li>
+                        <li>联系人： {$teamInfo.boss}</li>
+                        <li>联系电话：{$teamInfo.phone}</li>
+                        <li>电子邮箱：{$teamInfo.email}</li>
+                        <li class="team_icon">
+                            <div style="float:left; margin-top:-5px">认证：</div><span class="email_icon" title="邮箱认证"></span><span class="phone_icon" title="手机认证"></span><span class="id_icon" title="实名认证"></span></li>
+                    </ul>
+                </div>
+                <div class="team_sm"><b>提示:</b><br>请选择本地的团队，以便最大程度保证项目成功！</div>
+            </div>
+            <div class="clear"></div>
+        </div>
+        <div class="team_column">
+            <div class="team_column_tit">
+                <h2>团队介绍</h2>
+            </div>
+            <div class="team_column_info">
+                <p>
+                    {$teamInfo.desc}
+                </p>
+            </div>
+        </div>
+
+        <div class="team_column">
+            <div class="team_column_tit">
+                <h2>专业特长</h2>
+            </div>
+            <div class="team_column_info">
+                {$teamInfo.major}
+            </div>
+        </div>
+
+        <div class="team_column">
+            <div class="team_column_tit">
+                <h2>案例作品</h2>
+            </div>
+            <div class="case_list">
+                <ul>
+
+
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="content_right">
+
+    </div>
+    <div class="clear"></div>
+</div>
+{/block}

@@ -1,0 +1,419 @@
+{extend name="public/base" /}
+
+<!-- 文章标题 -->
+{block name="title"} {$articleInfo.title} {/block} {block name="plugin"}
+<ul class="blog-article-left-float-ul">
+
+    {if $zanif.member_id!=null}
+    <li id="support-fl" title="取消点赞"><span class="fa fa-thumbs-up select-like"></span></li>
+    {else /}
+    <li id="support-fl" title="点赞"><span class="fa fa-thumbs-up"></span></li>
+    {/if}
+
+    <li id="share-fl" title="分享">
+        <span class="fa fa-share-square-o"></span>
+        <ul class="displaynone">
+            <li><span class="fa fa-qq"></span></li>
+            <li><span class="fa fa-wechat"></span></li>
+            <li><span class="fa fa-weibo"></span></li>
+        </ul>
+    </li>
+
+    {if $collectif.member_id!=null}
+    <li id="star-fl" title="取消收藏"><span class="fa fa-star select-like"></span></li>
+    {else /}
+    <li id="star-fl" title="收藏"><span class="fa fa-star"></span></li>
+    {/if}
+
+    <li id="comment-fl" title="评论"><a href="#comment-top"><span class="fa fa-comment-o"></span></a></li>
+    <li id="top-fl" title="回到顶部"><span class="fa fa-chevron-up"></span></li>
+</ul>{/block}{block name="left-sider"} {/block} {block name="container"}
+<div class="col-lg-9">
+    <div class="xdd-block-background">
+
+        <!-- 文章详细内容 -->
+        <div class="xdd-blog-detail-article">
+            <h1>{$articleInfo.title}</h1>
+            {volist name="$articleInfo.tags|strToArray" id="tag"}
+            <span class="label label-default">{$tag}</span> {/volist}
+            <div class="xdd-blog-detail-userinfo">
+                <p>
+                    <span class="xdd-blog-user">
+                        <img width="50" height="50" alt="{$articleInfo.members.nickname}" class="" src="{$articleInfo.members.pic}"/>
+                        <span><a title="{$articleInfo.members.nickname}的主页" href="{:url('blog/Member/person',['id'=>$articleInfo.members.member_id])}"
+                                target="_blank">{$articleInfo.members.nickname}</a></span>
+                    </span>
+                    <span class="xdd-blog-articleinfo">
+                        <i class="" aria-hidden="true"></i>&nbsp;{$articleInfo.update_time|dateline}&nbsp;&nbsp;
+                        <i class="" aria-hidden="true"></i>&nbsp;浏览{$articleInfo.hits}次&nbsp;&nbsp;
+                    </span>
+                </p>
+            </div>
+
+            <!-- 文章 -->
+            <div class="xdd-blog-detail-content">
+                <img width="50%" height="auto" src="{$articleInfo.pic}">
+                <!--{{ post.content |safe }}-->
+                <h2 id="_1" style="box-sizing: inherit; font-family: Lato, &quot;Helvetica Neue&quot;, Arial, Helvetica, sans-serif; line-height: 1.2857em; margin: 40px 10px 20px 0px; font-weight: bold; padding:0em 0em 0em 9px; font-size: 1.3em; border-left: 6px solid rgb(255, 126, 121); color: rgba(0, 0, 0, 0.87);">
+                    {:htmlspecialchars_decode($articleInfo.desc)}</h2>
+                <p style="box-sizing: inherit; margin: 0em 0em 1em; line-height: 1.5em; font-size: 16px; color: rgba(0, 0, 0, 0.87); font-family: Lato, &quot;Helvetica Neue&quot;, Arial, Helvetica, sans-serif;">
+                    {:htmlspecialchars_decode($articleInfo.content)}
+                </p>
+
+            </div>
+
+            <!--打赏-->
+            <!-- <div class="xdd-blog-detail-func">
+
+                
+                <div class="xdd-blog-detail-func">
+                    <div class="xdd-blog-detail-rewards">
+                        <a class="btn" href="#pay" title="觉得文章有用请给作者打赏！">赏</a>
+                    </div>
+                </div>
+            </div> -->
+
+
+        </div>
+        <!-- 评论开始 -->
+        <div class="xdd-blog-detail-comment" name="comment-top" id="comment-top">
+
+            <div class="chat--item chat--left">
+
+                <div class="chat--content">
+                    <form id="comment-reply-text">
+                        <textarea name="comment-content" style="width:100%" rows="5"></textarea>
+                        <input name="article_id" type="hidden" value="{$articleInfo.id}" />
+                        <input name="parent_id" type="hidden" value="0" />
+                        <button type="button" class="subComment">评论</button>
+                        <button type="button" id="cancleComment" class="hidden">取消回复</button>
+
+                    </form>
+
+                </div>
+            </div>
+
+
+            {volist name="articleInfo.comments" id="vo"} {if $vo.parent_id==0}
+            <div class="chat--item chat--left">
+                <!-- 评论容器 -->
+                <!-- 评论者头像 -->
+                <div class="chat--avatar">
+                    <a href="{:url('blog/Member/person',['id'=>$vo.member.member_id])}">
+                        <img width="40" height="40" class="rounded-circle" src="{$vo.member.pic}" />
+                    </a>
+                </div>
+                <div class="chat--content">
+                    <div class="chat--info">
+                        <h6 class="chat--user h6">
+                            <a href="{:url('blog/Member/person',['id'=>$vo.member.member_id])}" target="_blank" class="am-comment-author">{$vo.member.nickname}</a>
+                        </h6>
+                        <span class="chat--time">评论于 <time datetime="">{$vo.create_time|dateline}</time></span>
+
+                    </div>
+                    <div class="chat--text">
+                        <p>{$vo.content}</p>
+                    </div>
+                    <!-- <span class="fa fa-thumbs-o-up">点赞</span> -->
+                    <a href="#comment-top"><span class="fa fa-comment-o showComment" user="{$vo.member.nickname}" userId="{$vo.member_id}"> 回复</span></a>
+
+                </div>
+                <!-- {if $vo.member.member_id==session('member.id')}
+                <button style="border: 0;background-color: transparent;outline: none;" id="delComment" dataid="{$vo.id}">删除</button> {/if} -->
+
+            </div>
+            {else/}
+            <div class="chat--item chat--left">
+                <!-- 评论容器 -->
+                <!-- 评论者头像 -->
+                <div class="chat--avatar">
+                    <h6 class="chat--user h6">
+                        <a href="{:url('blog/Member/person',['id'=>$vo.member.member_id])}" target="_blank" class="am-comment-author">{$vo.member.nickname}</a>
+                    </h6> 回复
+                </div>
+
+                <div class="chat--avatar">
+                    <h6 class="chat--user h6">
+                        <a href="{:url('blog/Member/person',['id'=>$vo.member_two.member_id])}" target="_blank" class="am-comment-author">{$vo.member_two.nickname}</a>
+                    </h6>
+                </div>
+                <div class="chat--content">
+                    <div class="chat--info">
+
+                        <span class="chat--time">回复于 <time datetime="">{$vo.create_time|dateline}</time></span>
+
+                    </div>
+                    <div class="chat--text">
+                        <p>{$vo.content}</p>
+                    </div>
+                    <!-- <span class="fa fa-thumbs-o-up">点赞</span> -->
+                    <a href="#comment-top"><span class="fa fa-comment-o showComment" user="{$vo.member.nickname}" userId="{$vo.member_id}"> 回复</span></a>
+
+                </div>
+                <!-- {if $vo.member.member_id==session('member.id')}
+                <button style="border: 0;background-color: transparent;outline: none;" id="delComment" dataid="{$vo.id}">删除</button> {/if} -->
+
+            </div>{/if} {/volist}
+        </div>
+
+        <!-- 评论结束 -->
+    </div>
+</div>
+<input id="article_id" type="hidden" value="{$articleInfo.id}" />
+<input id="member_id" type="hidden" value="{$articleInfo.member_id}" /> {/block}
+
+<!-- 推荐文章 -->
+{block name="right-slide"} {/block}
+<!-- 底部js -->
+{block name="js"}
+
+<script>
+    $(function() {
+        $(".showComment").click(function() {
+            var user = $(this).attr("user")
+            var userId = $(this).attr("userId")
+            $("#comment-reply-text button[id='cancleComment']").removeClass("hidden")
+            $("#comment-reply-text button[class='subComment']").text("回复")
+            var text = "回复:" + user
+            $("#comment-reply-text textarea").val('')
+            $("#comment-reply-text textarea").attr("placeholder", text)
+            $("#comment-reply-text input[name='parent_id']").attr("value", userId)
+        });
+
+
+
+
+        $("#cancleComment").click(function() {
+            $("#comment-reply-text input[name='parent_id']").val(0)
+            $("#comment-reply-text textarea").val('')
+            $("#comment-reply-text textarea").attr("placeholder", "")
+            $("#comment-reply-text button[id='cancleComment']").addClass("hidden")
+            $("#comment-reply-text button[class='subComment']").text("评论")
+        });
+
+        //评论
+        $(".subComment").click(function() {
+            if ("{:session('?member.id')}") {
+                $.ajax({
+                    url: "{:url('blog/Article/comm')}",
+                    type: "post",
+                    data: $("form").serialize(),
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(
+                                data.msg, {
+                                    icon: 6,
+                                    time: 2000
+                                },
+                                function() {
+                                    location.href = data.url;
+                                }
+                            );
+                        } else {
+                            layer.open({
+                                title: "评论失败",
+                                content: data.msg,
+                                icon: 5,
+                                anim: 5
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function() {
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+        });
+
+        $("#delComment").click(function() {
+            if ("{:session('?member.id')}") {
+                var comment_id = $(this).attr('dataid');
+                $.ajax({
+                    url: "{:url('blog/Article/delcomm')}",
+                    type: "post",
+                    data: {
+                        comment_id: comment_id,
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+                            layer.msg(
+                                data.msg, {
+                                    icon: 6,
+                                    time: 2000
+                                },
+                                function() {
+                                    location.href = document.URL;
+                                }
+                            );
+                        } else {
+                            layer.open({
+                                title: "评论失败",
+                                content: data.msg,
+                                icon: 5,
+                                anim: 5
+                            });
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function() {
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+
+        });
+
+        // /* 
+        //  * 关注
+        //  *
+        //  */
+        // $("#follow").click(function () {
+        //     if ("{:session('?member.id')}") {
+        //         var follow = $("#follow");
+        //         var article_id = $("#article_id").val();
+        //         var member_id = $("#member_id").val();
+        //         $.ajax({
+        //             url: "{:url('blog/Member/follow')}",
+        //             type: "post",
+        //             data: {
+        //                 member_id: member_id
+        //             },
+        //             dataType: "json",
+        //             success: function (data) {
+        //                 if (data.code == 1) {
+        //                     follow.css("background-color", "#a0a0a0");
+        //                     follow.text("已关注");
+
+        //                 } else {
+        //                     follow.css("background-color", "#4682b4");
+        //                     follow.text("关注TA")
+        //                 }
+        //             }
+        //         });
+        //     } else {
+        //         layer.msg(
+        //             "请先登录", {
+        //                 icon: 5,
+        //                 time: 2000
+        //             },
+        //             function () {
+        //                 location.href = "{:url('blog/Member/login')}";
+        //             }
+        //         );
+        //     }
+        //     return false;
+        // });
+        $('#share-fl').hover(function() {
+            $('#share-fl ul').removeClass('displaynone')
+        }, function() {
+            $('#share-fl ul').addClass('displaynone')
+        })
+
+        $(".fa-chevron-up").click(function() {
+            document.body.scrollTop = document.documentElement.scrollTop = 0;
+        })
+
+        /* 
+         * 点赞
+         *
+         */
+        $("#support-fl").click(function() {
+            if ("{:session('?member.id')}") {
+                var article_id = $("#article_id").val();
+                var member_id = $("#member_id").val()
+                $.ajax({
+                    url: "{:url('blog/Article/zan')}",
+                    type: "post",
+                    data: {
+                        article_id: article_id,
+                        member_id: member_id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+
+                            $("#support-fl").children().addClass('select-like')
+                            $("#support-fl").attr("title", "取消点赞")
+                        } else {
+
+                            $("#support-fl").children().removeClass("select-like")
+                            $("#support-fl").attr("title", "点赞")
+
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function() {
+                        sessionStorage.setItem('redirect_url', window.location.href)
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+        });
+
+
+        /* 
+         * 收藏
+         *
+         */
+        $("#star-fl").click(function() {
+            if ("{:session('?member.id')}") {
+                var article_id = $("#article_id").val();
+                var member_id = $("#member_id").val();
+                $.ajax({
+                    url: "{:url('blog/Article/collect')}",
+                    type: "post",
+                    data: {
+                        article_id: article_id,
+                        member_id: member_id
+                    },
+                    dataType: "json",
+                    success: function(data) {
+                        if (data.code == 1) {
+                            $("#star-fl").children().addClass('select-like');
+                            $("#star-fl").attr("title", "取消收藏")
+                        } else {
+                            $("#star-fl").children().removeClass('select-like')
+                            $("#star-fl").attr("title", "收藏")
+                        }
+                    }
+                });
+            } else {
+                layer.msg(
+                    "请先登录", {
+                        icon: 5,
+                        time: 2000
+                    },
+                    function() {
+                        location.href = "{:url('blog/Member/login')}";
+                    }
+                );
+            }
+            return false;
+        });
+    });
+</script>
+{/block}

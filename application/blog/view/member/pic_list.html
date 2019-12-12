@@ -1,0 +1,141 @@
+{extend name="public/person_base"} {block name="title"}{$memberInfo.nickname}的图片{/block}{block name="header"}
+<style>
+    .person-cate a {
+        color: black;
+    }
+    
+    .person-cate li a:hover {
+        text-decoration: none;
+        background-color: white;
+    }
+</style>
+{/block} {block name="container"}
+
+<ul class="nav nav-tabs person-cate" style="margin-bottom: 20px">
+
+    <li class="active">
+        <a href="{:url('blog/Member/picList',['id'=>$memberInfo.member_id])}">全部</a>
+    </li>
+    {volist name="picCates" id="cate"}
+    <li>
+        <a href="" class="personnav" id="catename" dataid="{$cate.id}">{$cate.catename}</a>
+    </li>
+    {/volist}
+</ul>
+<div class="row">
+    <div class="xdd-person-list">
+        {volist name="picList" id="vo"}
+        <div class="col-sm-4 col-md-4 xdd-paint-item">
+            <a target="_blank" href="{:url('plot/Plot/read',['id'=>$vo.id])}" class="thumbnail">
+                <div class="img-hover">
+                    <img src="{$vo.members.pic}" class="img-circle" width="20px" height="20px" />
+                    <h3>{$vo.title}</h3>
+                    <ul>
+                        <li>
+                            <p>{$vo.zan_num}</p>点赞</li>
+                        <li>
+                            <p>{$vo.hits}</p>浏览</li>
+                        <li>
+                            <p>{$vo.collect_num}</p>收藏</li>
+                    </ul>
+                </div>
+                <!-- <span class="label label-blue">{$vo.cate.catename}</span> -->
+                <img style="object-fit: cover;width: 240px;height:160px" src="{$vo.index_pic}">
+                <span class="label label-danger">{$vo.code.code_type}</span>
+
+            </a>
+        </div>
+        {/volist}
+    </div>
+</div>
+{/block}{block name="js"}
+
+<script type="text/javascript">
+    $(function() {
+        $(".personnav").click(function() {
+            var cateId = $(this).attr("dataid");
+            $(".person-cate li").each(function() {
+                $(this).removeClass("active");
+            });
+            $(this).parent().addClass("active")
+            var pageIndex = 1;
+            $.ajax({
+                url: "{:url('blog/Member/picList',['id'=>$memberInfo.member_id])}",
+                type: "post",
+                data: {
+                    pageIndex: pageIndex,
+                    cateId: cateId,
+                    memberId: "{$memberInfo.member_id}"
+                },
+                dataType: "json",
+                success: function(json) {
+                    $(".xdd-person-card").removeClass("show").addClass("hidden")
+                    $(".xdd-person-list").removeClass("hidden").addClass("show")
+                    $(".xdd-person-list").html("");
+                    var msg = json["rows"];
+                    var listLength = msg.length;
+                    console.log(listLength)
+                    for (var i = 0; i < listLength; i++) {
+                        var jsonForeach = msg[i];
+                        var jsonObjForeach = JSON.parse(JSON.stringify(jsonForeach));
+                        var id = jsonObjForeach['id'];
+                        var url = "{:url('blog/Article/info')}?id=" + jsonObjForeach["id"];
+                        var url_user = "{:url('blog/Member/person')}?id=" + jsonObjForeach["members"]["member_id"]
+                        str = '<div class="col-sm-4 col-md-4 xdd-paint-item">';
+                        str = str + '<a target="_blank" href="' + url + '" class="thumbnail">';
+                        str = str + '<div class="img-hover"><img src="' + jsonObjForeach['members']['pic'] + '" class="img-circle" width="20px" height="20px" />';
+                        str = str + ' <h3>' + jsonObjForeach['title'] + '</h3>';
+                        str = str + ' <ul><li><p>' + jsonObjForeach['zan_num'] + '</p>点赞</li><li><p>' + jsonObjForeach['hits'] + '</p>浏览</li><li><p>' + jsonObjForeach['collect_num'] + '</p>收藏</li></ul></div>'
+                        str = str + ' <img style="object-fit: cover;width: 240px;height:160px" src="' + jsonObjForeach['index_pic'] + '">';
+                        str = str + '<span class = "label label-danger">' + jsonObjForeach['code']['code_type'] + '</span></a></div>'
+                        $(".xdd-person-list").append(str);
+                    }
+                }
+            });
+            return false;
+        });
+
+    })
+
+
+    function editArticle(data) {
+        var id = $(data).attr('dataid');
+        window.open("{:url('blog/Article/edit')}?id=" + id);
+    }
+
+    function del(data) {
+        var id = $(data).attr('dataid');
+        layer.confirm('确定删除吗？', {
+            title: '删除文章',
+            icon: 3
+        }, function() {
+            $.ajax({
+                url: "{:url('blog/Article/del')}?id=" + id,
+                type: 'post',
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function(data) {
+                    if (data.code == 1) {
+                        layer.msg(data.msg, {
+                            icon: 6,
+                            time: 2000
+                        }, function() {
+                            location.href = data.url;
+                        });
+                    } else {
+                        layer.open({
+                            title: '删除文章失败！',
+                            content: data.msg,
+                            icon: 5,
+                            anim: 5
+                        });
+                    }
+                }
+            });
+        });
+
+    }
+</script>
+{/block}
