@@ -58,20 +58,20 @@ class Plot extends Base
             // 判断uuid是否存在
             if (!Cookie::has('path')) {
                 $uuid=uniqueStr();
-                $path="D:\\blog\code\\".$uuid;
+                $path="code/code/".$uuid;
                 Cookie::set('path', $path);
             } else {
                 $path=Cookie::get('path');
             }
         } else {
-            $path="D:\\blog\\code\\".session('member.username');
+            $path="code/code/".session('member.username');
             Cookie::set('path', $path);
         }
 
         if (!is_dir($path)) {
             //第三个参数是“true”表示能创建多级目录，iconv防止中文目录乱码
             $res=mkdir(iconv("UTF-8", "GBK", $path), 0777, true);
-            $order_file="xcopy D:\blog\code\code\* ".$path." 2>&1";
+            $order_file="xcopy code/code/* ".$path." 2>&1";
             $res_file=exec($order_file, $out_file);
             // dump($res_file);
         }
