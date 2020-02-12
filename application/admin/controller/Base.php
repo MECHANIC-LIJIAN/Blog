@@ -9,11 +9,8 @@ class Base extends Controller
     public function initialize()
     {
         $exception_arth_list = [
-            'admin/home/index',
             'admin/index/login',
             'admin/home/loginout',
-            'admin/home/home',
-            'admin/article/list',
         ];
         //获取到当前访问的页面
         $module = request()->module(); //获取当前访问的模块
@@ -24,14 +21,10 @@ class Base extends Controller
         /**
          *验证是否登录
          */
-        if (!session('?admin.id')) {
-            $this->redirect('admin/Index/login');
-        }elseif(session('admin.id')!=11){
-            if (!in_array(strtolower($url), $exception_arth_list)) {
-                $auth=new Auth();
-                if (!$auth->check(strtolower($url), session('admin.id'))) {
-                    $this->error('您没有权限访问');
-                }
+        //当前访问的页面$current_auth_str转为全小写后,如果不在$exception_arth_list客户中就验证用户是否登陆
+        if (!empty($exception_arth_list) && is_array($exception_arth_list)) {
+            if (!in_array(strtolower($redirect_url), $exception_arth_list)) {
+                $this->redirect("blog/Member/login");
             }
         }
     }
