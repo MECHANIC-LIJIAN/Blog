@@ -71,7 +71,7 @@ class Plot extends Base
         if (!is_dir($path)) {
             //第三个参数是“true”表示能创建多级目录，iconv防止中文目录乱码
             $res=mkdir(iconv("UTF-8", "GBK", $path), 0777, true);
-            $order_file="xcopy code/code/* ".$path." 2>&1";
+            $order_file="cp -r code/code/* ".$path." 2>&1";
             $res_file=exec($order_file, $out_file);
             dump($res_file);
         }
