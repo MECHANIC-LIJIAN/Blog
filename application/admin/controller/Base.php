@@ -3,7 +3,6 @@
 namespace app\admin\controller;
 
 use think\Controller;
-use auth\Auth;
 class Base extends Controller
 {
     public function initialize()
@@ -17,7 +16,6 @@ class Base extends Controller
         $controller = request()->controller(); //获取当前访问的控制器
         $action = request()->action(); //获取当前访问的方法
         $url = $module . '/' . $controller . '/' . $action; //转成字符串
-        // dump(strtolower($url));
         /**
          *验证是否登录
          */
