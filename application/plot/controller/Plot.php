@@ -74,7 +74,7 @@ class Plot extends Base
             // $order_file="xcopy code/code/* ".$path." 2>&1";
             $order_file="pwd 2>&1";
             $res_file=exec($order_file, $out_file);
-            // dump($res_file);
+            dump($res_file);
         }
 
         if (request()->isAjax()) {
