@@ -24,7 +24,7 @@ class Base extends Controller
         //当前访问的页面$current_auth_str转为全小写后,如果不在$exception_arth_list客户中就验证用户是否登陆
         if (!empty($exception_arth_list) && is_array($exception_arth_list)) {
             if (!in_array(strtolower($redirect_url), $exception_arth_list)) {
-                $this->redirect("blog/admin/login");
+                $this->redirect("admin/Index/login");
             }
         }
     }
