@@ -58,13 +58,13 @@ class Plot extends Base
             // 判断uuid是否存在
             if (!Cookie::has('path')) {
                 $uuid=uniqueStr();
-                $path="code/code/".$uuid;
+                $path="code/".$uuid;
                 Cookie::set('path', $path);
             } else {
                 $path=Cookie::get('path');
             }
         } else {
-            $path="code/code/".session('member.username');
+            $path="code/".session('member.username');
             Cookie::set('path', $path);
         }
 
@@ -73,7 +73,7 @@ class Plot extends Base
             $res=mkdir(iconv("UTF-8", "GBK", $path), 0777, true);
             $order_file="xcopy code/code/* ".$path." 2>&1";
             $res_file=exec($order_file, $out_file);
-            // dump($res_file);
+            dump($res_file);
         }
 
         if (request()->isAjax()) {
