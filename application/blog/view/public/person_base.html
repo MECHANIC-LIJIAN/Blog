@@ -126,13 +126,13 @@
                 <!-- <h1><a href="{:url('blog/Member/person',['id'=>$memberInfo.member_id])}">{$memberInfo.nickname}</a></h1> -->
                 <ul class="xdd-team-detail-headul">
                     <li>
-                        <p>{$memberInfo.follow.follow_num}</p>关注
+                        <p>{$memberInfo.follow.follow_num|default=0}</p>关注
                     </li>
                     <li>
-                        <p>{$memberInfo.follow.followed_num}</p>粉丝
+                        <p>{$memberInfo.follow.followed_num|default=0}</p>粉丝
                     </li>
                     <li>
-                        <p>{$memberInfo.article_num}</p>文章
+                        <p>{$memberInfo.article_num|default=0}</p>文章
                     </li>
                     <!-- <li>
                     <p>134665</p>贡献字数

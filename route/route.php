@@ -9,7 +9,7 @@
 // +----------------------------------------------------------------------
 // | Author: liu21st <liu21st@gmail.com>
 // +----------------------------------------------------------------------
-//use think\facade\Route;
+use think\facade\Route;
 
 Route::rule('/', 'index/Index/index', 'GET');
 Route::rule('search', 'search/Search/index', 'GET|POST');

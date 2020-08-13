@@ -14,57 +14,55 @@ class Index extends Base
      */
     public function index()
     {
-        $picList=model("Plot")
-        ->with('code')
-        ->field('id,cateid,member_id,title,code_type,index_pic,hits,zan_num,collect_num,update_time')
-        ->order('create_time', 'desc')
-        ->limit(18)->select();
+        $picList = model("Plot")
+            ->with('code')
+            ->field('id,cateid,member_id,title,code_type,index_pic,hits,zan_num,collect_num,update_time')
+            ->order('create_time', 'desc')
+            ->limit(18)->select();
         // dump($picList[0]);
-        $viewData=[
-            'picList'=>$picList,
-            'catename'=>'Plot',
-            'keyword'=>'all'
+        $viewData = [
+            'picList' => $picList,
+            'catename' => 'Plot',
+            'keyword' => 'all',
         ];
         $this->assign($viewData);
-      
+
         return view();
     }
 
-
     /**
-         * 分类
-         *
-         * @return void
-         */
+     * 分类
+     *
+     * @return void
+     */
     public function cate()
     {
-        $catename=input('catename');
-        $codeType=input('codeType');
-        $where=[];
-        
-        if ($catename==null&$codeType==null) {
-            $where=[
-               'status'=>1
-           ];
-        } elseif ($catename!=null&$codeType==null) {
-            $cateId=model("PlotCate")->where('catename', $catename)->field("id")->find();
-            $where=[
-                'status'=>1,
-                'cateid'=>$cateId['id']
+        $catename = input('catename');
+        $codeType = input('codeType');
+        $where = [];
+        if ($catename == null & $codeType == null) {
+            $where = [
+                'status' => 1,
             ];
-        } elseif ($codeType!=null&$catename==null|$catename=="Plot") {
-            $codeId=model("PlotCode")->where('code_type', $codeType)->field("id")->find();
-            $where=[
-                'status'=>1,
-                'code_type'=>$codeId['id']
+        } elseif ($catename != null & $codeType == null) {
+            $cateId = model("PlotCate")->where('catename', $catename)->field("id")->find();
+            $where = [
+                'status' => 1,
+                'cateid' => $cateId['id'],
+            ];
+        } elseif ($codeType != null & $catename == null | $catename == "Plot") {
+            $codeId = model("PlotCode")->where('code_type', $codeType)->field("id")->find();
+            $where = [
+                'status' => 1,
+                'code_type' => $codeId['id'],
             ];
         } else {
-            $cateId=model("PlotCate")->where('catename', $catename)->field("id")->find();
-            $codeId=model("PlotCode")->where('code_type', $codeType)->field("id")->find();
-            $where=[
-                'status'=>1,
-                'code_type'=>$codeId['id'],
-                'cateid'=>$cateId['id']
+            $cateId = model("PlotCate")->where('catename', $catename)->field("id")->find();
+            $codeId = model("PlotCode")->where('code_type', $codeType)->field("id")->find();
+            $where = [
+                'status' => 1,
+                'code_type' => $codeId['id'],
+                'cateid' => $cateId['id'],
             ];
         }
         $picList = model('Plot')
@@ -76,14 +74,14 @@ class Index extends Base
             ->select();
         // dump($where);
         $viewData = [
-                    'picList' => $picList,
-                    'catename'=>$catename,
-                    'codeType'=>$codeType,
-                    'userid' => session('member.id'),
-                    'cateId' => $cateId['id'],
-                    'codeId'=>$codeId['id']
-                ];
-                
+            'picList' => $picList,
+            'catename' => $catename,
+            'codeType' => $codeType,
+            'userid' => session('member.id'),
+            'cateId' => $cateId['id'],
+            'codeId' => $codeId['id'],
+        ];
+
         // $this->assign($viewData);
         return $this->fetch('index', $viewData);
     }
@@ -93,46 +91,45 @@ class Index extends Base
      *
      * @return void
      */
-    public function list()
-    {
+    function list() {
         if (request()->isAjax()) {
             $offset = input('post.pageIndex');
             $cateId = input('post.cateId');
             $keyword = input('post.keyword');
             $codeId = input('post.codeId');
-            $where=[];
+            $where = [];
             if ($keyword == 'all') {
-                if ($cateId ==null&$codeId==null) {
-                    $where=[
-                        'status'=>1,
+                if ($cateId == null & $codeId == null) {
+                    $where = [
+                        'status' => 1,
                     ];
-                } elseif ($cateId!=null&$codeId==null) {
-                    $where=[
-                        'status'=>1,
-                        'cateid'=>$cateId
+                } elseif ($cateId != null & $codeId == null) {
+                    $where = [
+                        'status' => 1,
+                        'cateid' => $cateId,
                     ];
-                } elseif ($cateId==null&$codeId!=null) {
-                    $where=[
-                        'status'=>1,
-                        'code_type'=>$codeId
+                } elseif ($cateId == null & $codeId != null) {
+                    $where = [
+                        'status' => 1,
+                        'code_type' => $codeId,
                     ];
                 } else {
-                    $where=[
-                        'status'=>1,
-                        'cateid'=>$cateId,
-                        'code_type'=>$codeId
+                    $where = [
+                        'status' => 1,
+                        'cateid' => $cateId,
+                        'code_type' => $codeId,
                     ];
                 }
             } else {
-                $where=['title', 'like', '%' . $keyword . '%'];
+                $where = ['title', 'like', '%' . $keyword . '%'];
             }
             // dump($where);
             $list = model('Plot')
-            ->with('members,code')
-            ->where($where)
-            ->order('create_time', 'desc')
-            ->page($offset, 9)
-            ->select();
+                ->with('members,code')
+                ->where($where)
+                ->order('create_time', 'desc')
+                ->page($offset, 9)
+                ->select();
             $count = count($list);
             // dump($list[0]);
             $res = [
@@ -141,7 +138,7 @@ class Index extends Base
             ];
             $this->assign($keyword);
             // dump($res);
-            
+
             return $res;
         }
     }
@@ -158,7 +155,7 @@ class Index extends Base
             ->select();
         $viewData = [
             'picList' => $picList,
-            'catename'=>'Plot',
+            'catename' => 'Plot',
             'cateId' => 0,
             'keyword' => $keyword,
         ];

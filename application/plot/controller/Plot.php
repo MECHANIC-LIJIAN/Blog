@@ -4,6 +4,7 @@ namespace app\plot\controller;
 
 use think\Request;
 use think\facade\Cookie;
+use think\facade\Env;
 
 class Plot extends Base
 {
@@ -58,36 +59,37 @@ class Plot extends Base
             // 判断uuid是否存在
             if (!Cookie::has('path')) {
                 $uuid=uniqueStr();
-                $path="code/".$uuid;
+                $path=Env::get('root_path')."public/code/".$uuid;
                 Cookie::set('path', $path);
             } else {
                 $path=Cookie::get('path');
             }
         } else {
-            $path="code/".session('member.username');
+            $path=Env::get('root_path')."public/code/".session('member.username');
             Cookie::set('path', $path);
         }
 
         if (!is_dir($path)) {
             //第三个参数是“true”表示能创建多级目录，iconv防止中文目录乱码
             $res=mkdir(iconv("UTF-8", "GBK", $path), 0777, true);
-            dump($res);
+            // dump($res);
             $order_file="cp -r code/code/* ".$path." 2>&1";
             $res_file=exec($order_file, $out_file);
-            dump($res_file);
+            // dump($res_file);
         }
 
         if (request()->isAjax()) {
             $path=Cookie::get('path');
             $code=input('code_text');
-            $code=str_replace("&amp;quot;", '"', $code);
+            $code=str_replace("&ldquo;",'"',str_replace("&amp;quot;", '"', $code));
+
             $myfile = fopen($path."/test.txt", "w+") or die("Unable to open code!");
             fwrite($myfile, $code);
             fclose($myfile);
 
-            $order='cd '.$path.'& python excuteIpynb.py -i test.txt -o tt -s Python-3.6.5 2>&1';
+            $order='cd '.$path.' & python3 excuteIpynb.py -i test.txt -o tt -s Python-3.6.5 2>&1';
             $res=exec($order, $out);
-            // dump($res);
+            dump($res);
            
             $html_file = fopen($path."/tt.html", "r") or die("Unable to open html!");
             $tt= fread($html_file, filesize($path."/tt.html"));
