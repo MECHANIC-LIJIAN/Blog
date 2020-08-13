@@ -89,7 +89,6 @@ class Plot extends Base
 
             $order='cd '.$path.' & python3 excuteIpynb.py -i test.txt -o tt -s Python-3.6.5 2>&1';
             $res=exec($order, $out);
-            dump($res);
            
             $html_file = fopen($path."/tt.html", "r") or die("Unable to open html!");
             $tt= fread($html_file, filesize($path."/tt.html"));
