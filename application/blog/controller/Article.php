@@ -40,7 +40,7 @@ class Article extends Base
         if (request()->isAjax()) {
             $data = [
                 'title' => input('post.title'),
-                'tags' => input('post.tags'),
+                'tags' => input('post.tags','atricle'),
                 'cateid' => input('post.cateid'),
                 'desc' => input('post.desc'),
                 'content' => input('post.content'),
