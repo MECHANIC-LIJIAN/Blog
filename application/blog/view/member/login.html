@@ -73,8 +73,8 @@
                                             <input type="text" class="form-control" id="verify" name="verify" placeholder="验证码" />
                                             <!-- <span class="input-group-addon"><img id="code" name="code" src="{:captcha_src()}" alt="刷新验证码"
                                                             onclick="refreshVerify()"></span> -->
-                                            <span class="input-group-addon" style="height: 46px;"><img id="code" name="code" src="{:url('blog/GetCaptcha/verify')}" alt="刷新验证码"
-                                                               height="38px" onclick="refreshVerify()"></span>
+                                            <span class="input-group-addon" style="height: 46px;"><img id="code" name="code" src="{:captcha_src()}" alt="刷新验证码"
+                                                               height="38px" onclick="this.src='{:captcha_src()}?'+Math.random()"></span>
 
                                         </div>
                                     </div>
