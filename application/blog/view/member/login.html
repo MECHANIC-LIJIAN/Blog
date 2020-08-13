@@ -129,7 +129,7 @@
 
     <script>
         function refreshVerify() {
-            document.getElementById('code').src = "{:url('blog/GetCaptcha/verify')}?" + Math.random();
+            document.getElementById('code').src= "{:captcha_src()}?" + Math.random();
         }
         $(function() {
             $("#login").click(function() {
